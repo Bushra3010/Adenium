@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/*
+  Adenium storefront design tokens.
+  Ground: warm bone. Ink: near-black with a green bias.
+  Accent: deep botanical green for actions; clay for prices and sale flags.
+*/
+@theme {
+  --color-bone: #faf8f4;
+  --color-bone-2: #f2efe8;
+  --color-bone-3: #e8e3d8;
+
+  --color-ink: #1a1f1b;
+  --color-ink-2: #3f4a42;
+  --color-ink-3: #6b7770;
+
+  --color-line: #e0dccf;
+  --color-line-2: #cec8b7;
+
+  --color-leaf: #1f5c40;
+  --color-leaf-2: #17462f;
+  --color-leaf-3: #e7efe9;
+
+  --color-clay: #9c4a2f;
+  --color-clay-2: #f6ece7;
+
+  --color-sun: #a8791a;
+  --color-sun-2: #faf1dd;
+
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 2px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  ::selection {
+    background-color: var(--color-leaf);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-leaf);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Long-form copy rendered from Markdown-ish product and guide content. */
+  .rich h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 1.75rem 0 0.6rem;
+    color: var(--color-ink);
+  }
+  .rich h3 {
+    font-weight: 600;
+    margin: 1.25rem 0 0.4rem;
+  }
+  .rich p {
+    margin-bottom: 0.9rem;
+    line-height: 1.7;
+    color: var(--color-ink-2);
+  }
+  .rich ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 0.9rem;
+    color: var(--color-ink-2);
+  }
+  .rich li {
+    margin-bottom: 0.35rem;
+  }
+  .rich strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+  .rich em {
+    font-style: italic;
+    color: var(--color-ink-3);
+  }
+  .rich > *:first-child {
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
