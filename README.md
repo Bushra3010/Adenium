@@ -40,10 +40,23 @@ npm run dev        # terminal 2 — http://localhost:3000
 
 ### Demo accounts
 
+Created by `npm run db:seed`, for local development only:
+
 | Role | Email | Password |
 |---|---|---|
 | Admin | `admin@adenium.local` | `Admin@12345` |
 | Customer | `customer@adenium.local` | `Customer@12345` |
+
+These credentials are public in this repository, so **never leave them on a live store**. Create
+a real administrator instead:
+
+```bash
+ADMIN_EMAIL=you@example.com npm run admin:create
+```
+
+It prints a generated password once, or takes your own via `ADMIN_PASSWORD`. Re-running for an
+existing address promotes that account to admin and resets its password, which is also how you
+recover from a lockout. Every existing session for that user is revoked.
 
 ### The local database
 
@@ -105,6 +118,7 @@ multi-day lead time — start it early. Email covers all notifications until it 
 | `npm run build` | Production build |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run admin:create` | Create an administrator, or promote an existing account |
 | `npm run smoke` | Browser end-to-end checks (see below) |
 
 Deployment configuration lives in `netlify.toml`; `src/proxy.ts` guards routes when no database
@@ -176,7 +190,8 @@ storefront takes over — no code change needed.
 
 ### After go-live
 
-- Change the seeded admin password immediately, or create your own admin and delete the seeded one.
+- Create your own administrator with `npm run admin:create`, then delete the seeded demo
+  accounts — their passwords are public in this repository.
 - Point the Razorpay webhook at `https://<your-domain>/api/payment/webhook` and set
   `RAZORPAY_WEBHOOK_SECRET` to match. The signature is checked against the raw body, so no
   redirect may sit in front of that path.
