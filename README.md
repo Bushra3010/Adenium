@@ -116,7 +116,8 @@ is configured.
 selection, cart, coupons, filters, checkout through the simulated gateway, stock decrement,
 admin order transitions, review moderation and CSV import — and asserts against the database.
 It needs `npm run dev:db` and `npm run dev` running, and it resets the test customer's cart so
-it is repeatable.
+it is repeatable. Assertions poll rather than sleep, so it is also valid against a hosted
+database — point `DATABASE_URL` at one and run it before going live.
 
 ---
 
@@ -150,9 +151,10 @@ storefront takes over — no code change needed.
 
    ```bash
    # App runtime — transaction pooler, port 6543.
-   # Serverless opens a connection per invocation, so it must be pooled, and
    # pgbouncer=true disables the prepared statements that pooler cannot hold.
-   DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-1-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+   # connection_limit=5 matters: the usual serverless advice of 1 deadlocks
+   # this app, because a single request issues several queries concurrently.
+   DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-1-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=5&pool_timeout=20"
 
    # Migrations only — session pooler, port 5432. Needs DDL and advisory locks.
    DIRECT_URL="postgresql://postgres.<ref>:<password>@aws-1-<region>.pooler.supabase.com:5432/postgres"

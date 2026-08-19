@@ -9,6 +9,22 @@ const BASE = process.env.SMOKE_BASE ?? 'http://localhost:3000';
 const results = [];
 let failures = 0;
 
+/**
+ * Polls until the predicate holds. Fixed sleeps were tuned for a local
+ * database; against a hosted one (Supabase, Neon) round-trips are an order of
+ * magnitude slower and assertions raced the writes they were checking.
+ */
+async function waitFor(predicate, { timeout = 20000, interval = 400 } = {}) {
+  const deadline = Date.now() + timeout;
+  let last;
+  for (;;) {
+    last = await predicate();
+    if (last) return last;
+    if (Date.now() > deadline) return last;
+    await new Promise((r) => setTimeout(r, interval));
+  }
+}
+
 function check(name, passed, detail = '') {
   results.push({ name, passed, detail });
   if (!passed) failures++;
@@ -60,18 +76,15 @@ try {
   // ── Coupon (CPN-01/02/04) ─────────────────────────────────────
   await page.fill('#coupon', 'WELCOME10');
   await page.click('button:has-text("Apply")');
-  await page.waitForTimeout(1500);
-  check('valid coupon applies', (await page.locator('main').innerText()).includes('WELCOME10'));
+  check('valid coupon applies',
+    Boolean(await waitFor(async () => (await page.locator('main').innerText()).includes('WELCOME10'))));
 
   await page.click('aside button:has-text("Remove")');
   await page.waitForTimeout(1200);
   await page.fill('#coupon', 'EXPIRED20');
   await page.click('button:has-text("Apply")');
-  await page.waitForTimeout(1500);
-  check(
-    'expired coupon is rejected with a reason',
-    (await page.locator('main').innerText()).includes('expired'),
-  );
+  check('expired coupon is rejected with a reason',
+    Boolean(await waitFor(async () => (await page.locator('main').innerText()).includes('expired'))));
 
   // ── Search and filters (SRCH-01/03/05) ────────────────────────
   await page.goto(`${BASE}/search?q=euphorbia`);
@@ -149,21 +162,24 @@ try {
   await admin.goto(`${BASE}/admin/orders/${order.id}`);
   await admin.selectOption('#next-status', 'PACKED');
   await admin.click('button:has-text("Update order")');
-  await admin.waitForTimeout(2000);
-  check('order moves to packed', (await admin.locator('#main').innerText()).includes('Packed'));
+  const packed = await waitFor(async () =>
+    (await db.order.findUnique({ where: { id: order.id } }))?.status === 'PACKED');
+  check('order moves to packed', Boolean(packed));
 
   await admin.selectOption('#next-status', 'SHIPPED');
   await admin.click('button:has-text("Update order")');
-  await admin.waitForTimeout(1200);
-  const blockedText = await admin.locator('#main').innerText();
-  check('shipping without an AWB is refused', blockedText.includes('courier and AWB'));
+  const blocked = await waitFor(async () =>
+    (await admin.locator('#main').innerText()).includes('courier and AWB'));
+  check('shipping without an AWB is refused', Boolean(blocked));
 
   await admin.fill('#courier', 'Delhivery');
   await admin.fill('#awb', 'DL99887766');
   await admin.click('button:has-text("Update order")');
-  await admin.waitForTimeout(2000);
 
-  const shipped = await db.order.findUnique({ where: { id: order.id } });
+  const shipped = await waitFor(async () => {
+    const o = await db.order.findUnique({ where: { id: order.id } });
+    return o?.status === 'SHIPPED' && o?.awbNumber === 'DL99887766' ? o : null;
+  }) ?? (await db.order.findUnique({ where: { id: order.id } }));
   check('order ships with courier and AWB recorded',
     shipped.status === 'SHIPPED' && shipped.awbNumber === 'DL99887766',
     `${shipped.status} / ${shipped.awbNumber}`);
@@ -184,8 +200,10 @@ try {
   const stockField = admin.locator('input[aria-label="Stock quantity"]').first();
   await stockField.fill('77');
   await stockField.blur();
-  await admin.waitForTimeout(1500);
-  const restocked = await db.variant.findUnique({ where: { sku: 'ADN-S-ARB-TS-01' } });
+  const restocked = await waitFor(async () => {
+    const v = await db.variant.findUnique({ where: { sku: 'ADN-S-ARB-TS-01' } });
+    return v?.stockQty === 77 ? v : null;
+  }) ?? (await db.variant.findUnique({ where: { sku: 'ADN-S-ARB-TS-01' } }));
   check('inventory stock edit saves', restocked.stockQty === 77, String(restocked.stockQty));
 
   // Review moderation (REV-02)
@@ -204,11 +222,16 @@ try {
 
   await admin.goto(`${BASE}/admin/reviews?status=PENDING`);
   await admin.click('button:has-text("Publish")');
-  await admin.waitForTimeout(1800);
-  const approved = await db.review.findUnique({ where: { id: testReview.id } });
+  const approved = await waitFor(async () => {
+    const r = await db.review.findUnique({ where: { id: testReview.id } });
+    return r?.status === 'APPROVED' ? r : null;
+  }) ?? (await db.review.findUnique({ where: { id: testReview.id } }));
   check('review is published on approval', approved.status === 'APPROVED', approved.status);
 
-  const ratedProduct = await db.product.findUnique({ where: { slug: 'adenium-obesum-mixed-hybrid-seeds' } });
+  const ratedProduct = await waitFor(async () => {
+    const p = await db.product.findUnique({ where: { slug: 'adenium-obesum-mixed-hybrid-seeds' } });
+    return p?.ratingCount === 1 ? p : null;
+  }) ?? (await db.product.findUnique({ where: { slug: 'adenium-obesum-mixed-hybrid-seeds' } }));
   check('product rating recomputed from approved reviews', ratedProduct.ratingCount === 1,
     `avg ${ratedProduct.ratingAvg}, count ${ratedProduct.ratingCount}`);
 
@@ -223,18 +246,17 @@ try {
   await admin.goto(`${BASE}/admin/import`);
   await admin.fill('#csv-body', csv);
   await admin.click('button:has-text("Run the import")');
-  await admin.waitForTimeout(2500);
-  const imported = await db.product.findUnique({
-    where: { sku: 'SMOKE-P1' },
-    include: { variants: true },
-  });
+  const imported = await waitFor(async () => {
+    const p = await db.product.findUnique({ where: { sku: 'SMOKE-P1' }, include: { variants: true } });
+    return p?.variants.length === 2 ? p : null;
+  }, { timeout: 30000 }) ?? (await db.product.findUnique({ where: { sku: 'SMOKE-P1' }, include: { variants: true } }));
   check('CSV import creates product and variants',
     imported?.variants.length === 2, `${imported?.variants.length ?? 0} variants`);
 
   // A malformed row is reported rather than half-imported
   await admin.fill('#csv-body', 'product_sku,name,type,variant_sku,price,stock\nSMOKE-P2,Bad Row,WRONG,SMOKE-P2-01,notanumber,-3');
   await admin.click('button:has-text("Check without importing")');
-  await admin.waitForTimeout(1800);
+  await waitFor(async () => (await admin.locator('#main').innerText()).includes('problem'));
   const importText = await admin.locator('#main').innerText();
   check('bad CSV rows are reported, not imported',
     importText.includes('problem') && (await db.product.findUnique({ where: { sku: 'SMOKE-P2' } })) === null);
