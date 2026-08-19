@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { getCategoryTree } from '@/lib/catalog';
+import { safely } from '@/lib/db-status';
 import { NewsletterForm } from './newsletter-form';
 
 export async function SiteFooter() {
-  const tree = await getCategoryTree();
+  const tree = await safely(() => getCategoryTree(), [], 'footer categories');
 
   return (
     <footer className="mt-24 border-t border-line bg-bone-2">

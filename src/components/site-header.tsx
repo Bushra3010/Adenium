@@ -1,15 +1,17 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { getCategoryTree } from '@/lib/catalog';
 import { getCurrentUser } from '@/lib/auth';
 import { cartItemCount } from '@/lib/cart';
+import { safely } from '@/lib/db-status';
 import { SearchBox } from './search-box';
 import { MobileNav } from './mobile-nav';
 
 export async function SiteHeader() {
   const [tree, user, count] = await Promise.all([
-    getCategoryTree(),
-    getCurrentUser(),
-    cartItemCount(),
+    safely(() => getCategoryTree(), [], 'header categories'),
+    safely(() => getCurrentUser(), null, 'header session'),
+    safely(() => cartItemCount(), 0, 'header cart count'),
   ]);
 
   const isStaff = user?.role === 'ADMIN' || user?.role === 'STAFF';
@@ -59,7 +61,11 @@ export async function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-1 sm:gap-3">
           <div className="hidden md:block">
-            <SearchBox />
+            {/* SearchBox reads useSearchParams(), which needs a boundary on any
+                route Next can prerender statically. */}
+            <Suspense fallback={<div className="h-[38px] w-72 border border-line bg-white" />}>
+              <SearchBox />
+            </Suspense>
           </div>
 
           <Link
@@ -111,7 +117,9 @@ export async function SiteHeader() {
       </div>
 
       <div className="border-t border-line px-5 py-2 md:hidden">
-        <SearchBox />
+        <Suspense fallback={<div className="h-[38px] w-full border border-line bg-white" />}>
+          <SearchBox />
+        </Suspense>
       </div>
     </header>
   );

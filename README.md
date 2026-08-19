@@ -107,6 +107,9 @@ multi-day lead time — start it early. Email covers all notifications until it 
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run smoke` | Browser end-to-end checks (see below) |
 
+Deployment configuration lives in `netlify.toml`; `src/proxy.ts` guards routes when no database
+is configured.
+
 ### Smoke tests
 
 `npm run smoke` drives a real browser through the paths that matter — sign-in, variant
@@ -114,6 +117,54 @@ selection, cart, coupons, filters, checkout through the simulated gateway, stock
 admin order transitions, review moderation and CSV import — and asserts against the database.
 It needs `npm run dev:db` and `npm run dev` running, and it resets the test customer's cart so
 it is repeatable.
+
+---
+
+## Deploying to Netlify
+
+The app is server-rendered, so it runs as Netlify Functions via the official Next.js adapter —
+`netlify.toml` and `@netlify/plugin-nextjs` are already configured. Connect the repository and
+Netlify picks both up.
+
+**The build succeeds without a database**, so the first deploy always goes green. Until
+`DATABASE_URL` is set, every page serves a `/setup` screen explaining what to connect, and the
+API returns `503`. Once the variable is present, `src/proxy.ts` becomes a no-op and the real
+storefront takes over — no code change needed.
+
+### Making it functional
+
+1. **Provision PostgreSQL.** Netlify DB (in the project sidebar under *Database*) is the
+   shortest path and wires the connection string in for you. Neon and Supabase both have free
+   tiers if you would rather host it elsewhere.
+2. **Set the environment variables** under *Project configuration → Environment variables*:
+
+   | Variable | Required | Notes |
+   |---|---|---|
+   | `DATABASE_URL` | yes | Include `?sslmode=require` if your provider gives it |
+   | `AUTH_SECRET` | yes | `openssl rand -base64 32` |
+   | `NEXT_PUBLIC_SITE_URL` | yes | Your live URL — used for canonical tags, the sitemap and email links |
+   | `RAZORPAY_*` | for payments | Without them checkout refuses in production rather than simulating |
+   | `SMTP_*`, `MAIL_FROM` | for email | Without them mail is logged, not sent |
+
+   Do **not** set `pgbouncer=true` against a real PostgreSQL unless you actually sit behind
+   PgBouncer — it is only needed for the local PGlite dev server.
+
+3. **Create the schema and load content**, pointed at the same database:
+
+   ```bash
+   DATABASE_URL="<your production url>" npx prisma migrate deploy
+   DATABASE_URL="<your production url>" npm run db:seed   # optional demo catalog
+   ```
+
+4. **Redeploy.** The storefront replaces the setup screen.
+
+### After go-live
+
+- Change the seeded admin password immediately, or create your own admin and delete the seeded one.
+- Point the Razorpay webhook at `https://<your-domain>/api/payment/webhook` and set
+  `RAZORPAY_WEBHOOK_SECRET` to match. The signature is checked against the raw body, so no
+  redirect may sit in front of that path.
+- Submit `https://<your-domain>/sitemap.xml` in Google Search Console.
 
 ---
 

@@ -7,8 +7,36 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 // products and guides appear without a redeploy (SEO-05).
 export const revalidate = 3600;
 
-/** SEO-05 — regenerated from the catalog, so it never goes stale. */
+const staticRoutes: MetadataRoute.Sitemap = [
+  { url: `${SITE}/`, changeFrequency: 'daily', priority: 1 },
+  { url: `${SITE}/seeds`, changeFrequency: 'daily', priority: 0.9 },
+  { url: `${SITE}/plants`, changeFrequency: 'daily', priority: 0.9 },
+  { url: `${SITE}/guides`, changeFrequency: 'weekly', priority: 0.7 },
+];
+
+/**
+ * SEO-05 — regenerated from the catalog, so it never goes stale.
+ *
+ * This is the one route prerendered at build time, so it is also the one place
+ * a missing or unreachable database would break the build rather than a single
+ * request. When that happens we emit the static routes alone; the next
+ * revalidation picks up the catalog once the database is reachable.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (!process.env.DATABASE_URL) {
+    console.warn('[sitemap] DATABASE_URL is not set — emitting static routes only.');
+    return staticRoutes;
+  }
+
+  try {
+    return await catalogSitemap();
+  } catch (error) {
+    console.warn('[sitemap] catalog unavailable, emitting static routes only:', error);
+    return staticRoutes;
+  }
+}
+
+async function catalogSitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, categories, guides, pages] = await Promise.all([
     prisma.product.findMany({
       where: { status: 'ACTIVE' },
@@ -27,13 +55,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       select: { slug: true, updatedAt: true },
     }),
   ]);
-
-  const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${SITE}/`, changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE}/seeds`, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SITE}/plants`, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SITE}/guides`, changeFrequency: 'weekly', priority: 0.7 },
-  ];
 
   const entries: MetadataRoute.Sitemap = [
     ...staticRoutes,

@@ -1,0 +1,25 @@
+# Netlify deployment configuration.
+#
+# The app is server-rendered — every catalog, cart, checkout and admin route
+# reads the database per request — so it runs as Netlify Functions via the
+# official Next.js adapter rather than as a static export.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Prisma's engine download and the Next build both need a modern Node.
+  NODE_VERSION = "20"
+  # Keep dev-only tooling (Playwright browsers) out of the deploy.
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# The payment webhook must reach the function untouched — Razorpay signs the
+# raw body, so no rewrite or redirect may sit in front of it.
+[[headers]]
+  for = "/api/payment/webhook"
+  [headers.values]
+    Cache-Control = "no-store"
