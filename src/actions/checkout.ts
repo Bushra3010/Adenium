@@ -3,8 +3,8 @@
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { findCart, resolveCart } from '@/lib/cart';
-import { createOrderFromCart, OrderError } from '@/lib/order';
-import { createGatewayOrder } from '@/lib/razorpay';
+import { createOrderFromCart, failOrder, OrderError } from '@/lib/order';
+import { createGatewayOrder, gatewayConfigured } from '@/lib/razorpay';
 import { toPaise } from '@/lib/money';
 import { checkoutSchema } from '@/lib/validation';
 
@@ -47,6 +47,10 @@ export async function placeOrder(input: unknown): Promise<PlaceOrderResult> {
     return { ok: false, message: cart.notices.join(' ') };
   }
 
+  // Held outside the try so the catch can release the stock reservation if
+  // anything after order creation fails.
+  let createdOrderId: string | null = null;
+
   try {
     const order = await createOrderFromCart({
       cartId: cart.id!,
@@ -66,6 +70,7 @@ export async function placeOrder(input: unknown): Promise<PlaceOrderResult> {
         customerNote: parsed.data.customerNote || null,
       },
     });
+    createdOrderId = order.id;
 
     if (user && parsed.data.saveAddress) {
       const count = await prisma.address.count({ where: { userId: user.id } });
@@ -109,8 +114,28 @@ export async function placeOrder(input: unknown): Promise<PlaceOrderResult> {
       customerPhone: parsed.data.phone,
     };
   } catch (error) {
+    // The order exists and is holding stock by this point, so release it rather
+    // than leaving a reservation to expire on its own. Otherwise a shopper
+    // retrying after a gateway failure locks out a one-of-a-kind plant.
+    if (createdOrderId) {
+      await failOrder(
+        createdOrderId,
+        'Could not open a payment with the gateway; stock released.',
+      ).catch((e) => console.error('[checkout] failed to release reservation', e));
+    }
+
     if (error instanceof OrderError) return { ok: false, message: error.message };
-    console.error('[checkout] order creation failed', error);
+
+    if (!gatewayConfigured) {
+      console.error('[checkout] no payment gateway configured', error);
+      return {
+        ok: false,
+        message:
+          'Online payment is not available yet. Nothing has been charged — please contact us to complete your order.',
+      };
+    }
+
+    console.error('[checkout] could not start payment', error);
     return {
       ok: false,
       message: 'We could not start the payment. Nothing has been charged — please try again.',
