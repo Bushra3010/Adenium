@@ -2,16 +2,23 @@
 // Data model per PRD §7. Provider: PostgreSQL (PRD §10).
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
   // "native" covers local development; the RHEL target is what Netlify
   // Functions (Amazon Linux) load at runtime.
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // Runtime connection. On serverless (Netlify Functions) this should be a
+  // pooled connection — Supabase's transaction pooler on port 6543 — because
+  // each invocation opens its own connection.
+  url       = env("DATABASE_URL")
+  // Migrations need a direct, unpooled session: the transaction pooler cannot
+  // run DDL or hold the advisory locks Prisma uses. Falls back to DATABASE_URL
+  // when unset, which is what local development wants.
+  directUrl = env("DIRECT_URL")
 }
 
 // ─────────────────────────────────────────────────────────────

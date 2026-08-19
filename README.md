@@ -133,27 +133,41 @@ storefront takes over — no code change needed.
 
 ### Making it functional
 
-1. **Provision PostgreSQL.** Netlify DB (in the project sidebar under *Database*) is the
-   shortest path and wires the connection string in for you. Neon and Supabase both have free
-   tiers if you would rather host it elsewhere.
+1. **Provision PostgreSQL.** Supabase, Neon and Netlify DB all have free tiers.
 2. **Set the environment variables** under *Project configuration → Environment variables*:
 
    | Variable | Required | Notes |
    |---|---|---|
-   | `DATABASE_URL` | yes | Include `?sslmode=require` if your provider gives it |
+   | `DATABASE_URL` | yes | Pooled connection used by the running app |
+   | `DIRECT_URL` | yes | Unpooled connection, used only by `prisma migrate` |
    | `AUTH_SECRET` | yes | `openssl rand -base64 32` |
-   | `NEXT_PUBLIC_SITE_URL` | yes | Your live URL — used for canonical tags, the sitemap and email links |
+   | `NEXT_PUBLIC_SITE_URL` | yes | Your live URL — canonical tags, sitemap, email links |
    | `RAZORPAY_*` | for payments | Without them checkout refuses in production rather than simulating |
    | `SMTP_*`, `MAIL_FROM` | for email | Without them mail is logged, not sent |
 
-   Do **not** set `pgbouncer=true` against a real PostgreSQL unless you actually sit behind
-   PgBouncer — it is only needed for the local PGlite dev server.
+   **Supabase specifically.** Take both strings from *Connect → ORMs → Prisma* in the
+   dashboard. They are not interchangeable:
+
+   ```bash
+   # App runtime — transaction pooler, port 6543.
+   # Serverless opens a connection per invocation, so it must be pooled, and
+   # pgbouncer=true disables the prepared statements that pooler cannot hold.
+   DATABASE_URL="postgresql://postgres.<ref>:<password>@aws-1-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+
+   # Migrations only — session pooler, port 5432. Needs DDL and advisory locks.
+   DIRECT_URL="postgresql://postgres.<ref>:<password>@aws-1-<region>.pooler.supabase.com:5432/postgres"
+   ```
+
+   Note that Supabase's `anon` and `service_role` API keys are **not** used by this app. They
+   drive Supabase's REST and JS clients; this app talks to Postgres directly through Prisma, so
+   the connection string is the only credential it needs. Never expose `service_role` publicly —
+   it bypasses Row Level Security.
 
 3. **Create the schema and load content**, pointed at the same database:
 
    ```bash
-   DATABASE_URL="<your production url>" npx prisma migrate deploy
-   DATABASE_URL="<your production url>" npm run db:seed   # optional demo catalog
+   DATABASE_URL="<pooled url>" DIRECT_URL="<direct url>" npm run db:deploy
+   DATABASE_URL="<pooled url>" DIRECT_URL="<direct url>" npm run db:seed   # optional demo catalog
    ```
 
 4. **Redeploy.** The storefront replaces the setup screen.
