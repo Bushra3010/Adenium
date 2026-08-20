@@ -33,7 +33,7 @@ export function CatalogCards({ cards }: { cards: CatalogCard[] }) {
                 card.tone === 'sage' ? 'bg-sage/60' : 'bg-bone-2'
               }`}
             >
-              <div className="relative z-10 max-w-[64%] sm:max-w-[62%]">
+              <div className="relative z-10 max-w-full sm:max-w-[62%]">
                 <div className="flex items-center gap-3">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-leaf shadow-sm">
                     <Icon size={24} />
@@ -43,7 +43,7 @@ export function CatalogCards({ cards }: { cards: CatalogCard[] }) {
 
                 <p className="mt-4 text-[14px] leading-relaxed text-ink-2">{card.description}</p>
 
-                <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
+                <ul className="mt-6 grid grid-cols-2 gap-2.5">
                   {card.children.map((child, i) => {
                     const ChildIcon = CHILD_ICONS[i % CHILD_ICONS.length];
                     return (
@@ -73,7 +73,7 @@ export function CatalogCards({ cards }: { cards: CatalogCard[] }) {
               <img
                 src={card.image.startsWith('/img/ph/') ? `${card.image}?bare=1` : card.image}
                 alt=""
-                className={`pointer-events-none absolute right-1 ${
+                className={`pointer-events-none absolute right-1 hidden sm:block ${
                   card.slug === 'seeds'
                     ? 'top-1/2 h-[72%] -translate-y-1/2'
                     : 'bottom-3 h-[70%] object-bottom'

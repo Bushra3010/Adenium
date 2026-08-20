@@ -52,7 +52,7 @@ export default async function AdminLayout({ children }: LayoutProps<'/admin'>) {
         </header>
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[180px_1fr]">
-          <nav aria-label="Admin" className="lg:sticky lg:top-6 lg:self-start">
+          <nav aria-label="Admin" className="min-w-0 lg:sticky lg:top-6 lg:self-start">
             <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0.5">
               {links.map((link) => (
                 <li key={link.href}>

@@ -227,17 +227,15 @@ export function Star({ className, size = 14, filled = true }: P & { filled?: boo
   );
 }
 
-/** Brand mark — a leaf in a filled roundel. */
-export function LogoMark({ size = 40 }: { size?: number }) {
+/** Brand mark — a leaf in a filled roundel. Sized by class, so it can scale. */
+export function LogoMark({ className = 'h-10 w-10' }: { className?: string }) {
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center rounded-full bg-leaf text-white"
-      style={{ width: size, height: size }}
+      className={`inline-flex shrink-0 items-center justify-center rounded-full bg-leaf text-white ${className}`}
       aria-hidden="true"
     >
       <svg
-        width={size * 0.55}
-        height={size * 0.55}
+        className="h-[55%] w-[55%]"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

@@ -32,12 +32,12 @@ export async function SiteHeader() {
       </p>
 
       <div className="border-b border-line bg-bone/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-5 py-3.5 xl:px-10">
+        <div className="mx-auto flex max-w-[1440px] items-center gap-2 px-4 py-3.5 sm:gap-4 sm:px-5 xl:px-10">
           <MobileNav tree={tree} />
 
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
-            <LogoMark size={40} />
-            <span className="font-display text-[28px] leading-none tracking-tight text-leaf">
+          <Link href="/" className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+            <LogoMark className="h-9 w-9 sm:h-10 sm:w-10" />
+            <span className="font-display text-[22px] leading-none tracking-tight text-leaf sm:text-[28px]">
               Adenium
             </span>
           </Link>
@@ -83,29 +83,29 @@ export async function SiteHeader() {
             </Suspense>
           </div>
 
-          <div className="ml-auto flex items-center gap-1 lg:ml-4">
+          <div className="ml-auto flex shrink-0 items-center lg:ml-4">
             <Link
               href={user ? '/account/wishlist' : '/login?next=/account/wishlist'}
-              className="rounded-full p-2.5 text-ink-2 transition-colors hover:bg-leaf-3 hover:text-leaf"
+              className="rounded-full p-2 text-ink-2 transition-colors hover:bg-leaf-3 hover:text-leaf sm:p-2.5"
               aria-label="Wishlist"
             >
-              <Heart size={21} />
+              <Heart size={20} />
             </Link>
 
             <Link
               href={user ? '/account' : '/login'}
-              className="rounded-full p-2.5 text-ink-2 transition-colors hover:bg-leaf-3 hover:text-leaf"
+              className="rounded-full p-2 text-ink-2 transition-colors hover:bg-leaf-3 hover:text-leaf sm:p-2.5"
               aria-label={user ? 'Your account' : 'Sign in'}
             >
-              <User size={21} />
+              <User size={20} />
             </Link>
 
             <Link
               href="/cart"
-              className="relative rounded-full border border-line bg-white p-2.5 text-ink-2 transition-colors hover:border-leaf hover:text-leaf"
+              className="relative ml-1 rounded-full border border-line bg-white p-2 text-ink-2 transition-colors hover:border-leaf hover:text-leaf sm:p-2.5"
               aria-label={`Cart, ${count} item${count === 1 ? '' : 's'}`}
             >
-              <Bag size={21} />
+              <Bag size={20} />
               {count > 0 && (
                 <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-leaf px-1 text-[11px] font-semibold text-white">
                   {count}

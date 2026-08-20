@@ -29,7 +29,7 @@ export default async function AccountLayout({ children }: LayoutProps<'/account'
       </header>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[200px_1fr]">
-        <nav aria-label="Account" className="lg:sticky lg:top-32 lg:self-start">
+        <nav aria-label="Account" className="min-w-0 lg:sticky lg:top-32 lg:self-start">
           <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0.5">
             {LINKS.map((link) => (
               <li key={link.href}>

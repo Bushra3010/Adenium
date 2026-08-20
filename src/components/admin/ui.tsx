@@ -30,7 +30,7 @@ export function Panel({
   action?: React.ReactNode;
 }) {
   return (
-    <section className="border border-line bg-white">
+    <section className="min-w-0 border border-line bg-white">
       {title && (
         <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5">
           <h2 className="font-display text-lg text-ink">{title}</h2>
