@@ -72,7 +72,7 @@ export function Hero({
             <img
               src={feature?.image ?? '/img/ph/hero-feature.svg'}
               alt={feature?.imageAlt ?? ''}
-              className="h-full min-h-[340px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] sm:min-h-[440px]"
+              className="h-full min-h-[340px] w-full object-contain p-6 pb-24 transition-transform duration-700 group-hover:scale-[1.03] sm:min-h-[440px]"
             />
             <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-leaf px-3.5 py-1.5 text-[12px] font-medium text-white">
               <Star size={13} filled={false} />

@@ -31,7 +31,7 @@ export function ProductShowcase({
     <div className="grid gap-10 lg:grid-cols-2">
       <div>
         <div
-          className={`relative aspect-square overflow-hidden border border-line bg-bone-2 ${
+          className={`relative aspect-square overflow-hidden rounded-2xl border border-line bg-gradient-to-b from-sage/50 to-bone-2 ${
             zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
           }`}
           onClick={() => setZoomed((z) => !z)}
@@ -50,7 +50,7 @@ export function ProductShowcase({
             <img
               src={active.url}
               alt={active.alt}
-              className={`h-full w-full object-cover transition-transform duration-300 ${
+              className={`h-full w-full object-contain p-6 transition-transform duration-300 ${
                 zoomed ? 'scale-[1.8]' : 'scale-100'
               }`}
             />
@@ -65,12 +65,12 @@ export function ProductShowcase({
                   type="button"
                   onClick={() => setActiveId(image.id)}
                   aria-current={image.id === active?.id}
-                  className={`block h-20 w-20 overflow-hidden border transition-colors ${
+                  className={`block h-20 w-20 overflow-hidden rounded-xl border bg-gradient-to-b from-sage/45 to-bone-2 transition-colors ${
                     image.id === active?.id ? 'border-leaf' : 'border-line hover:border-ink-3'
                   }`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={image.url} alt={image.alt} className="h-full w-full object-cover" />
+                  <img src={image.url} alt={image.alt} className="h-full w-full object-contain p-1.5" />
                 </button>
               </li>
             ))}

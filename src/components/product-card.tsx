@@ -22,14 +22,14 @@ export function ProductCardItem({
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition-shadow duration-300 hover:shadow-[0_12px_40px_-18px_rgba(22,33,28,0.35)]">
-      <div className="relative aspect-square overflow-hidden bg-bone-2">
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-sage/55 to-bone-2">
         <Link href={`/product/${product.slug}`} aria-label={product.name}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={product.image}
             alt={product.imageAlt}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.04]"
           />
         </Link>
 

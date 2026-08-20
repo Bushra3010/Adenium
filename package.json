@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit",
     "smoke": "node scripts/smoke.mjs",
     "db:deploy": "prisma migrate deploy",
-    "admin:create": "tsx scripts/create-admin.ts"
+    "admin:create": "tsx scripts/create-admin.ts",
+    "images:apply": "tsx scripts/set-product-images.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
