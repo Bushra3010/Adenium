@@ -28,7 +28,7 @@ export function AddToCartButton({
 
   if (soldOut || !variantId) {
     return (
-      <span className="inline-flex items-center rounded-full bg-bone-3 px-4 py-2 text-[13px] font-medium text-ink-3">
+      <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-bone-3 px-4 py-2 text-[13px] font-medium text-ink-3">
         Sold out
       </span>
     );
@@ -38,9 +38,9 @@ export function AddToCartButton({
     return (
       <Link
         href={`/product/${productSlug}`}
-        className="relative z-10 inline-flex items-center gap-1.5 rounded-full border border-leaf px-4 py-2 text-[13px] font-medium text-leaf transition-colors hover:bg-leaf hover:text-white"
+        className="relative z-10 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-leaf px-4 py-2 text-[13px] font-medium text-leaf transition-colors hover:bg-leaf hover:text-white"
       >
-        Choose options
+        Options
       </Link>
     );
   }
@@ -61,7 +61,7 @@ export function AddToCartButton({
           }
         });
       }}
-      className="relative z-10 inline-flex items-center gap-1.5 rounded-full bg-leaf px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-leaf-2 disabled:opacity-60"
+      className="relative z-10 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-leaf px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-leaf-2 disabled:opacity-60"
     >
       <CartPlus size={15} />
       {pending ? 'Adding…' : added ? 'Added' : 'Add to cart'}

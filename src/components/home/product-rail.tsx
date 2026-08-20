@@ -71,57 +71,60 @@ export function ProductRail({
         </Link>
       </div>
 
-      <div
-        ref={railRef}
-        onScroll={measure}
-        className="rail mt-8 grid auto-cols-[85%] grid-flow-col gap-5 overflow-x-auto pb-2 sm:auto-cols-[46%] lg:auto-cols-[31%] xl:auto-cols-[23.5%]"
-      >
-        {products.map((product) => (
-          <ProductCardItem
-            key={product.id}
-            product={product}
-            wishlisted={saved.has(product.id)}
-            signedIn={signedIn}
-          />
-        ))}
+      <div className="relative mt-8">
+        <div
+          ref={railRef}
+          onScroll={measure}
+          className="rail grid auto-cols-[85%] grid-flow-col gap-5 overflow-x-auto pb-2 sm:auto-cols-[46%] lg:auto-cols-[31%] xl:auto-cols-[23.5%]"
+        >
+          {products.map((product) => (
+            <ProductCardItem
+              key={product.id}
+              product={product}
+              wishlisted={saved.has(product.id)}
+              signedIn={signedIn}
+            />
+          ))}
+        </div>
+
+        {pages > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={() => scrollTo(Math.max(0, page - 1))}
+              disabled={page === 0}
+              aria-label="Previous products"
+              className="absolute -left-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-2 bg-white text-ink-2 shadow-md transition-colors hover:border-leaf hover:text-leaf disabled:opacity-0 lg:flex xl:-left-5"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollTo(Math.min(pages - 1, page + 1))}
+              disabled={page >= pages - 1}
+              aria-label="Next products"
+              className="absolute -right-3 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-2 bg-white text-ink-2 shadow-md transition-colors hover:border-leaf hover:text-leaf disabled:opacity-0 lg:flex xl:-right-5"
+            >
+              <ArrowRight size={18} />
+            </button>
+          </>
+        )}
       </div>
 
       {pages > 1 && (
-        <div className="mt-8 flex items-center justify-center gap-5">
-          <button
-            type="button"
-            onClick={() => scrollTo(Math.max(0, page - 1))}
-            disabled={page === 0}
-            aria-label="Previous products"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line-2 text-ink-2 transition-colors hover:border-leaf hover:text-leaf disabled:opacity-35"
-          >
-            <ArrowLeft size={17} />
-          </button>
-
-          <div className="flex items-center gap-2">
-            {Array.from({ length: pages }).map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => scrollTo(i)}
-                aria-label={`Go to products ${i + 1} of ${pages}`}
-                aria-current={i === page}
-                className={`h-2 rounded-full transition-all ${
-                  i === page ? 'w-6 bg-leaf' : 'w-2 bg-line-2 hover:bg-ink-3'
-                }`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => scrollTo(Math.min(pages - 1, page + 1))}
-            disabled={page >= pages - 1}
-            aria-label="Next products"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line-2 text-ink-2 transition-colors hover:border-leaf hover:text-leaf disabled:opacity-35"
-          >
-            <ArrowRight size={17} />
-          </button>
+        <div className="mt-7 flex items-center justify-center gap-2">
+          {Array.from({ length: pages }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => scrollTo(i)}
+              aria-label={`Go to products ${i + 1} of ${pages}`}
+              aria-current={i === page}
+              className={`h-2.5 rounded-full transition-all ${
+                i === page ? 'w-2.5 bg-leaf' : 'w-2.5 bg-line-2 hover:bg-ink-3'
+              }`}
+            />
+          ))}
         </div>
       )}
     </section>

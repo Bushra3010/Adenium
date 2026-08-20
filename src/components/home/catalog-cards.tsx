@@ -73,7 +73,7 @@ export function CatalogCards({ cards }: { cards: CatalogCard[] }) {
               <img
                 src={card.image.startsWith('/img/ph/') ? `${card.image}?bare=1` : card.image}
                 alt=""
-                className="pointer-events-none absolute -right-6 bottom-0 h-[62%] w-[38%] object-contain opacity-95"
+                className="pointer-events-none absolute bottom-0 right-2 h-[74%] max-w-[38%] object-contain object-bottom"
               />
             </div>
           );

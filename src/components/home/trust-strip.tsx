@@ -1,5 +1,4 @@
 import { Box, Headset, Shield, Sprout } from '../icons';
-import { LeafDecor } from './leaf-decor';
 
 const ITEMS = [
   {
@@ -27,23 +26,35 @@ const ITEMS = [
 export function TrustStrip() {
   return (
     <section className="relative overflow-hidden border-b border-line bg-bone-2">
-      <LeafDecor className="-left-12 -top-6 h-[200px] w-[180px]" opacity={0.16} />
-      <LeafDecor className="-right-12 -bottom-8 h-[220px] w-[200px]" flip opacity={0.16} />
+      {/* eslint-disable @next/next/no-img-element */}
+      <img
+        src="/Images/background image left.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-8 top-1/2 hidden h-[150%] -translate-y-1/2 select-none object-contain opacity-90 lg:block"
+      />
+      <img
+        src="/Images/background image right.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-10 top-1/2 hidden h-[165%] -translate-y-1/2 select-none object-contain opacity-90 lg:block"
+      />
+      {/* eslint-enable @next/next/no-img-element */}
 
-      <div className="relative mx-auto grid max-w-[1440px] gap-x-8 gap-y-7 px-5 py-9 sm:grid-cols-2 lg:grid-cols-4 xl:px-10">
+      <div className="relative mx-auto grid max-w-[1200px] gap-x-8 gap-y-7 px-5 py-9 sm:grid-cols-2 lg:grid-cols-4">
         {ITEMS.map(({ Icon, title, body }, i) => (
           <div
             key={title}
             className={`flex items-start gap-3.5 ${
-              i > 0 ? 'lg:border-l lg:border-line lg:pl-8' : ''
+              i > 0 ? 'lg:border-l lg:border-line-2/70 lg:pl-8' : ''
             }`}
           >
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-leaf-3 text-leaf">
-              <Icon size={21} />
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-leaf-3 text-leaf">
+              <Icon size={22} />
             </span>
             <div className="min-w-0">
-              <h2 className="text-[14.5px] font-semibold text-ink">{title}</h2>
-              <p className="mt-0.5 text-[13px] leading-relaxed text-ink-3">{body}</p>
+              <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-3">{body}</p>
             </div>
           </div>
         ))}

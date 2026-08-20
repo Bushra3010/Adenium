@@ -100,8 +100,9 @@ export default async function HomePage() {
     name: parent.name,
     description: parent.description,
     image:
-      (parent.slug === 'seeds' ? seedFeature?.image : plantFeature?.image) ??
-      `/img/ph/${parent.slug}.svg`,
+      parent.slug === 'plants'
+        ? '/Images/Adanium Plant Image.png'
+        : (seedFeature?.image ?? `/img/ph/${parent.slug}.svg`),
     tone: i === 0 ? 'sage' : 'sand',
     children: parent.children.map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
   }));

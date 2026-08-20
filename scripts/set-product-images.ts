@@ -14,7 +14,7 @@ import { PrismaClient } from '../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
-/** product slug -> file under public/products/. */
+/** product slug -> file under public/. */
 const MAP: Record<string, string> = {
   // Bare-branched caudex in a dark green bowl.
   'adenium-arabicum-caudex-bonsai': 'Images/plant1.png',
@@ -27,13 +27,13 @@ const MAP: Record<string, string> = {
 };
 
 async function main() {
-  const publicDir = path.join(process.cwd(), 'public', 'products');
+  const publicDir = path.join(process.cwd(), 'public');
   let applied = 0;
   let missing = 0;
 
   for (const [slug, file] of Object.entries(MAP)) {
     if (!existsSync(path.join(publicDir, file))) {
-      console.log(`  - ${slug}: waiting on public/products/${file}`);
+      console.log(`  - ${slug}: waiting on public/${file}`);
       missing++;
       continue;
     }
@@ -47,7 +47,7 @@ async function main() {
       continue;
     }
 
-    const url = `/products/${file}`;
+    const url = `/${file}`;
     const primary = await prisma.productImage.findFirst({
       where: { productId: product.id, isPrimary: true },
     });
