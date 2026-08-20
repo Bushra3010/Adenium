@@ -37,13 +37,13 @@ export default async function GuidesPage() {
             href={`/guides/${g.slug}`}
             className="group flex flex-col border border-line bg-white"
           >
-            <div className="aspect-[16/9] overflow-hidden bg-bone-2">
+            <div className="aspect-[16/10] overflow-hidden bg-gradient-to-b from-sage/55 to-bone-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={g.coverImage ?? '/img/ph/guide.svg'}
                 alt=""
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <div className="flex flex-1 flex-col p-6">

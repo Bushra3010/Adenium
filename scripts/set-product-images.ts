@@ -38,6 +38,15 @@ const MAP: Record<string, string[]> = {
   'adenium-obesum-mixed-hybrid-seeds': ['Images/Adenium Obesum.png'],
   'euphorbia-obesa-seeds': ['Images/Euphorbia Obesa.png'],
   'gomphrena-everlasting-flower-seeds': ['Images/Gomphrena Everlasting Flower Seeds.png'],
+  'astrophytum-mixed-cactus-seeds': ['Images/Astrophytum Mixed Cactus Seeds.png'],
+};
+
+/** guide slug -> cover photograph under public/. */
+const GUIDE_COVERS: Record<string, string> = {
+  'growing-adenium-from-seed': 'Images/Growing Adenium from Seed.png',
+  'desert-rose-bonsai-training': 'Images/Training a Desert Rose as bonsai.png',
+  'watering-succulents-in-indian-monsoon':
+    'Images/KeepingSucculentsAliveThroughTheIndianMonsoon.png',
 };
 
 async function main() {
@@ -76,6 +85,24 @@ async function main() {
     });
 
     console.log(`  ${product.name.padEnd(44).slice(0, 44)} ${present.length} photo(s)`);
+    applied++;
+  }
+
+  for (const [slug, file] of Object.entries(GUIDE_COVERS)) {
+    if (!existsSync(path.join(publicDir, file))) {
+      console.log(`  - guide ${slug}: waiting on public/${file}`);
+      missing++;
+      continue;
+    }
+    const updated = await prisma.guide.updateMany({
+      where: { slug },
+      data: { coverImage: `/${file}` },
+    });
+    if (updated.count === 0) {
+      console.log(`  - guide ${slug}: no such guide`);
+      continue;
+    }
+    console.log(`  guide: ${slug.padEnd(38)} cover set`);
     applied++;
   }
 

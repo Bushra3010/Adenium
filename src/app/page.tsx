@@ -166,13 +166,13 @@ export default async function HomePage() {
                   href={`/guides/${g.slug}`}
                   className="group block overflow-hidden rounded-2xl border border-line bg-white transition-shadow hover:shadow-[0_12px_40px_-18px_rgba(22,33,28,0.35)]"
                 >
-                  <div className="aspect-[16/10] overflow-hidden bg-bone-2">
+                  <div className="aspect-[16/10] overflow-hidden bg-gradient-to-b from-sage/55 to-bone-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={g.coverImage ?? '/img/ph/guide.svg'}
                       alt=""
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                   <div className="p-5">

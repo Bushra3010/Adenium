@@ -61,12 +61,12 @@ export default async function GuidePage({ params }: PageProps<'/guides/[slug]'>)
           )}
         </header>
 
-        <div className="mt-8 aspect-[21/9] overflow-hidden border border-line bg-bone-2">
+        <div className="mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-line bg-gradient-to-b from-sage/55 to-bone-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={guide.coverImage ?? '/img/ph/guide.svg'}
             alt=""
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain p-4"
           />
         </div>
 
