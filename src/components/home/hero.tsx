@@ -96,7 +96,7 @@ export function Hero({
               href="/seeds/adenium-seeds"
               title="Adenium Seeds"
               body="Handpicked. High germination."
-              image={bareArt(seedCard?.image, 'promo-seeds')}
+              image="/Images/Seeds.png"
               tone="bg-sage"
             />
             <PromoCard
@@ -137,7 +137,7 @@ function PromoCard({
       href={href}
       className={`group relative flex min-h-[180px] items-center overflow-hidden rounded-2xl ${tone} p-6 sm:min-h-[212px]`}
     >
-      <div className="relative z-10 max-w-[58%]">
+      <div className="relative z-10 max-w-[56%]">
         <h2 className="font-display text-[24px] leading-tight text-ink">{title}</h2>
         <p className="mt-1.5 whitespace-pre-line text-[13.5px] leading-relaxed text-ink-2">
           {body}
@@ -152,7 +152,7 @@ function PromoCard({
       <img
         src={image}
         alt=""
-        className="absolute -right-4 bottom-0 h-[86%] w-[46%] object-contain transition-transform duration-500 group-hover:scale-105"
+        className="absolute -right-2 top-1/2 h-[88%] w-[46%] -translate-y-1/2 object-contain transition-transform duration-500 group-hover:scale-105"
       />
     </Link>
   );

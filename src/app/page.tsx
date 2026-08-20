@@ -102,7 +102,7 @@ export default async function HomePage() {
     image:
       parent.slug === 'plants'
         ? '/Images/Adanium Plant Image.png'
-        : (seedFeature?.image ?? `/img/ph/${parent.slug}.svg`),
+        : '/Images/seeds and leaves.png',
     tone: i === 0 ? 'sage' : 'sand',
     children: parent.children.map((c) => ({ id: c.id, name: c.name, slug: c.slug })),
   }));
