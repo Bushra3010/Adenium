@@ -396,6 +396,48 @@ const PRODUCTS: SeedProduct[] = [
     ],
   },
   {
+    type: 'PLANT',
+    name: 'Echeveria Perle von Nürnberg',
+    botanicalName: 'Echeveria \u00d7 Perle von N\u00fcrnberg',
+    slug: 'echeveria-perle-von-nurnberg',
+    sku: 'ADN-P-ECH-PVN',
+    category: 'succulents',
+    shortDescription: 'A dusty violet rosette that deepens to pink in strong light. The classic windowsill echeveria.',
+    description:
+      'A hybrid raised in Germany in the 1930s and still the echeveria most people picture: a tight rosette of broad, powdery leaves in dusty lavender, edged and tipped with pink.\n\nThe colour is a light meter. Grown bright, the farina takes on a rose flush and the rosette stays compact; grown dim, it greens up and stretches. Mature plants send up an arching stem of coral bells in late spring.\n\nSupplied as an established rosette in the pot it was grown in.',
+    careGuide:
+      '## Light\n\nAs bright as you can manage — four to six hours of direct sun keeps the rosette tight and the colour up. A plant that stretches and pales is asking to be moved, not fed.\n\n## Watering\n\nDrench, then let the mix dry through completely. Water into the soil, never over the rosette: the powdery farina marks permanently where droplets sit, and water trapped in the centre rots the growing point.\n\nCut right back in winter.\n\n## Mix and pot\n\nAt least half mineral — pumice, coarse sand or crushed granite with a little compost. A shallow pot suits the shallow roots, and terracotta buys margin if you tend to overwater.\n\n## Handling\n\nDo not wipe the leaves. That grey bloom is the plant\u2019s own sunscreen and does not grow back on a leaf once rubbed off.\n\n## Offsets\n\nMature plants pup around the base. Twist them off with a little stem, let the wound callus for a few days, and pot them dry.',
+    tags: ['beginner-friendly', 'flowering'],
+    attributes: {
+      current_height: '8\u201312 cm across',
+      pot_supplied: 'Ceramic pot',
+      watering: 'When the mix is dry through',
+      maturity: '2 years',
+      flower_colour: 'Coral (on arching stems)',
+      light: 'Full sun to bright indirect',
+      growth_pattern: 'Rosette',
+      placement: 'Bright window',
+      difficulty: 'Easy',
+      origin: 'India (nursery grown)',
+    },
+    faqs: [
+      {
+        question: 'Why has mine turned green?',
+        answer:
+          'Not enough light. The lavender and pink come out under strong sun; in shade the plant reverts to green and the rosette opens up. Move it brighter and the new growth colours again \u2014 the old leaves stay as they are.',
+      },
+      {
+        question: 'The grey coating rubbed off. Will it return?',
+        answer:
+          'Not on that leaf. Farina is produced as the leaf forms, so a rubbed patch stays bare for the life of the leaf. New leaves come with it intact.',
+      },
+    ],
+    variants: [
+      { options: { pot_size: '4 inch', height: '10\u201315 cm' }, price: 849, compareAt: 999, stock: 9, weightG: 520 },
+      { options: { pot_size: '5 inch', height: '10\u201315 cm' }, price: 1150, stock: 4, weightG: 780 },
+    ],
+  },
+  {
     type: 'SEED',
     name: 'Gomphrena Everlasting Flower Seeds',
     botanicalName: 'Gomphrena globosa',

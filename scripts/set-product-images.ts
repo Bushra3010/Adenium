@@ -14,12 +14,16 @@ import { PrismaClient } from '../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
-/** product slug -> file in public/products (without the leading slash). */
+/** product slug -> file under public/products/. */
 const MAP: Record<string, string> = {
-  'adenium-arabicum-caudex-bonsai': 'adenium-caudex-dark-bowl.png',
-  'adenium-obesum-grafted-desert-rose': 'adenium-bonsai-green-bowl.png',
-  'astrophytum-asterias-sand-dollar-cactus': 'cactus-flowering-cream-pot.png',
-  'echeveria-perle-von-nurnberg': 'echeveria-purple-rosette.png',
+  // Bare-branched caudex in a dark green bowl.
+  'adenium-arabicum-caudex-bonsai': 'Images/plant1.png',
+  // Flowering barrel cactus in a cream speckled pot.
+  'astrophytum-asterias-sand-dollar-cactus': 'Images/plant2.png',
+  // Purple rosette in a cream pot.
+  'echeveria-perle-von-nurnberg': 'Images/plant3.png',
+  // Leafy adenium bonsai in a glossy green bowl.
+  'adenium-obesum-grafted-desert-rose': 'Images/plant4.png',
 };
 
 async function main() {
@@ -29,7 +33,7 @@ async function main() {
 
   for (const [slug, file] of Object.entries(MAP)) {
     if (!existsSync(path.join(publicDir, file))) {
-      console.log(`  – ${slug}: waiting on public/products/${file}`);
+      console.log(`  - ${slug}: waiting on public/products/${file}`);
       missing++;
       continue;
     }
