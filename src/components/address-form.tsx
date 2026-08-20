@@ -60,6 +60,8 @@ export function AddressForm({
           inputMode="tel"
           autoComplete="tel"
           hint="10 digits, no country code"
+          pattern="[0-9]{10}"
+          maxLength={10}
         />
       </div>
 
@@ -140,6 +142,8 @@ function Text({
   hint,
   inputMode,
   autoComplete,
+  pattern,
+  maxLength,
 }: {
   label: string;
   name: string;
@@ -148,6 +152,8 @@ function Text({
   hint?: string;
   inputMode?: 'text' | 'numeric' | 'tel';
   autoComplete?: string;
+  pattern?: string;
+  maxLength?: number;
 }) {
   const id = `addr-${name}`;
   return (
@@ -163,6 +169,8 @@ function Text({
         defaultValue={defaultValue}
         inputMode={inputMode}
         autoComplete={autoComplete}
+        pattern={pattern}
+        maxLength={maxLength}
         className="mt-1.5 w-full border border-line bg-white px-3 py-2.5 text-sm focus:border-leaf focus:outline-none"
       />
       {hint && <p className="mt-1 text-xs text-ink-3">{hint}</p>}

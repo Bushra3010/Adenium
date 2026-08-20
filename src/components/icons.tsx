@@ -227,6 +227,54 @@ export function Star({ className, size = 14, filled = true }: P & { filled?: boo
   );
 }
 
+export function Home({ className, size = 20, strokeWidth = 1.5 }: P) {
+  return (
+    <svg {...base(size, strokeWidth)} className={className}>
+      <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-9.5Z" />
+    </svg>
+  );
+}
+
+export function Grid({ className, size = 20, strokeWidth = 1.5 }: P) {
+  return (
+    <svg {...base(size, strokeWidth)} className={className}>
+      <rect x="4" y="4" width="6.5" height="6.5" rx="1.6" />
+      <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6" />
+      <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6" />
+      <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6" />
+    </svg>
+  );
+}
+
+export function Sliders({ className, size = 20, strokeWidth = 1.5 }: P) {
+  return (
+    <svg {...base(size, strokeWidth)} className={className}>
+      <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+      <circle cx="16" cy="7" r="2" />
+      <circle cx="10" cy="17" r="2" />
+    </svg>
+  );
+}
+
+export function Trolley({ className, size = 20, strokeWidth = 1.5 }: P) {
+  return (
+    <svg {...base(size, strokeWidth)} className={className}>
+      <path d="M2.5 4h2.2l2.6 10.5h10.2L20 7H7" />
+      <circle cx="9.5" cy="19" r="1.6" />
+      <circle cx="17" cy="19" r="1.6" />
+    </svg>
+  );
+}
+
+export function BadgeCheck({ className, size = 20, strokeWidth = 1.5 }: P) {
+  return (
+    <svg {...base(size, strokeWidth)} className={className}>
+      <path d="M12 3.2 14 5l2.6-.3.7 2.5 2.2 1.4-1.2 2.4 1.2 2.4-2.2 1.4-.7 2.5L14 19l-2 1.8L10 19l-2.6.3-.7-2.5-2.2-1.4L5.7 13 4.5 10.6l2.2-1.4.7-2.5L10 5l2-1.8Z" />
+      <path d="m9.3 12 1.9 1.9 3.5-3.8" />
+    </svg>
+  );
+}
+
 /** Brand mark — a leaf in a filled roundel. Sized by class, so it can scale. */
 export function LogoMark({ className = 'h-10 w-10' }: { className?: string }) {
   return (

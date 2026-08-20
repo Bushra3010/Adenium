@@ -196,6 +196,7 @@ export function BuyBox({
               min={1}
               max={available}
               value={quantity}
+              inputMode="numeric"
               onChange={(e) =>
                 setQuantity(Math.min(available, Math.max(1, Number(e.target.value) || 1)))
               }

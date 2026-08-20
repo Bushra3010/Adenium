@@ -15,8 +15,8 @@ const CHILD_ICONS = [Sprout, Cactus, Flower, PottedPlant];
 /** The two ways into the catalog: seed you grow, or a plant with a head start. */
 export function CatalogCards({ cards }: { cards: CatalogCard[] }) {
   return (
-    <section className="mx-auto max-w-[1440px] px-5 py-16 xl:px-10">
-      <h2 className="font-display text-[34px] leading-tight text-ink">Browse the catalog</h2>
+    <section className="mx-auto max-w-[1440px] px-4 py-8 sm:px-5 lg:py-16 xl:px-10">
+      <h2 className="font-display text-[26px] leading-tight text-ink lg:text-[34px]">Browse the catalog</h2>
       <div className="mt-3 h-px w-14 bg-line-2" />
       <p className="mt-5 max-w-[62ch] text-[15px] leading-relaxed text-ink-2">
         Two ways in — start from seed and grow it yourself, or take on a plant that already has a

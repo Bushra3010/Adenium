@@ -56,10 +56,10 @@ export function ProductRail({
   const saved = new Set(wishlisted);
 
   return (
-    <section className="mx-auto max-w-[1440px] px-5 py-12 xl:px-10">
+    <section className="mx-auto max-w-[1440px] px-4 py-6 sm:px-5 lg:py-12 xl:px-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="font-display text-[34px] leading-tight text-ink">{title}</h2>
+          <h2 className="font-display text-[26px] leading-tight text-ink lg:text-[34px]">{title}</h2>
           <div className="mt-3 h-px w-14 bg-line-2" />
         </div>
         <Link
@@ -75,7 +75,7 @@ export function ProductRail({
         <div
           ref={railRef}
           onScroll={measure}
-          className="rail grid auto-cols-[85%] grid-flow-col gap-5 overflow-x-auto pb-2 sm:auto-cols-[46%] lg:auto-cols-[31%] xl:auto-cols-[23.5%]"
+          className="scroll-fade rail -mx-4 grid auto-cols-[62%] grid-flow-col gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:auto-cols-[46%] sm:gap-5 sm:px-0 lg:auto-cols-[31%] xl:auto-cols-[23.5%]"
         >
           {products.map((product) => (
             <ProductCardItem

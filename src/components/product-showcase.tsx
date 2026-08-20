@@ -30,20 +30,13 @@ export function ProductShowcase({
   return (
     <div className="grid gap-10 lg:grid-cols-2">
       <div>
-        <div
-          className={`relative aspect-square overflow-hidden rounded-2xl border border-line bg-gradient-to-b from-sage/50 to-bone-2 ${
+        <button
+          type="button"
+          onClick={() => setZoomed((z) => !z)}
+          aria-label={zoomed ? 'Zoom out' : 'Zoom in'}
+          className={`relative aspect-square w-full overflow-hidden rounded-2xl border border-line bg-gradient-to-b from-sage/50 to-bone-2 ${
             zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
           }`}
-          onClick={() => setZoomed((z) => !z)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              setZoomed((z) => !z);
-            }
-          }}
-          aria-label={zoomed ? 'Zoom out' : 'Zoom in'}
         >
           {active && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -55,16 +48,16 @@ export function ProductShowcase({
               }`}
             />
           )}
-        </div>
+        </button>
 
         {images.length > 1 && (
-          <ul className="mt-3 flex gap-3">
-            {images.map((image) => (
-              <li key={image.id}>
+          <ul className="mt-3 flex gap-3" role="listbox" aria-label="Product images">
+            {images.map((image, i) => (
+              <li key={image.id} role="option" aria-selected={image.id === active?.id}>
                 <button
                   type="button"
                   onClick={() => setActiveId(image.id)}
-                  aria-current={image.id === active?.id}
+                  aria-label={`${image.alt || 'Product image'} ${i + 1} of ${images.length}${image.id === active?.id ? ' (selected)' : ''}`}
                   className={`block h-20 w-20 overflow-hidden rounded-xl border bg-gradient-to-b from-sage/45 to-bone-2 transition-colors ${
                     image.id === active?.id ? 'border-leaf' : 'border-line hover:border-ink-3'
                   }`}

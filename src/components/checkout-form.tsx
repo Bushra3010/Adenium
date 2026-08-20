@@ -237,6 +237,8 @@ export function CheckoutForm({
                 inputMode="tel"
                 autoComplete="tel"
                 hint="10 digits, for delivery updates"
+                pattern="[0-9]{10}"
+                maxLength={10}
               />
             </div>
             <Text label="Address line 1" name="line1" autoComplete="address-line1" />
@@ -341,6 +343,8 @@ function Text({
   inputMode,
   autoComplete,
   defaultValue,
+  pattern,
+  maxLength,
 }: {
   label: string;
   name: string;
@@ -350,6 +354,8 @@ function Text({
   inputMode?: 'text' | 'numeric' | 'tel';
   autoComplete?: string;
   defaultValue?: string;
+  pattern?: string;
+  maxLength?: number;
 }) {
   const id = `co-${name}`;
   return (
@@ -366,6 +372,8 @@ function Text({
         inputMode={inputMode}
         autoComplete={autoComplete}
         defaultValue={defaultValue}
+        pattern={pattern}
+        maxLength={maxLength}
         className="mt-1.5 w-full border border-line bg-white px-3 py-2.5 text-sm focus:border-leaf focus:outline-none"
       />
       {hint && <p className="mt-1 text-xs text-ink-3">{hint}</p>}

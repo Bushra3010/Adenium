@@ -25,7 +25,7 @@ const ITEMS = [
 
 export function TrustStrip() {
   return (
-    <section className="relative overflow-hidden border-b border-line bg-bone-2">
+    <section className="relative overflow-hidden bg-bone lg:border-b lg:border-line lg:bg-bone-2">
       {/* eslint-disable @next/next/no-img-element */}
       <img
         src="/Images/background image left.png"
@@ -41,7 +41,24 @@ export function TrustStrip() {
       />
       {/* eslint-enable @next/next/no-img-element */}
 
-      <div className="relative mx-auto grid max-w-[1200px] gap-x-8 gap-y-7 px-5 py-9 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Phone: one scrollable card */}
+      <div className="px-4 py-4 lg:hidden">
+        <ul className="rail flex gap-3 overflow-x-auto rounded-2xl bg-bone-2 p-4">
+          {ITEMS.map(({ Icon, title, body }) => (
+            <li key={title} className="flex w-[210px] shrink-0 items-start gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-leaf-3 text-leaf">
+                <Icon size={17} />
+              </span>
+              <div className="min-w-0">
+                <h2 className="text-[12.5px] font-semibold leading-snug text-ink">{title}</h2>
+                <p className="mt-0.5 text-[11.5px] leading-snug text-ink-3">{body}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="relative mx-auto hidden max-w-[1200px] gap-x-8 gap-y-7 px-5 py-9 lg:grid lg:grid-cols-4">
         {ITEMS.map(({ Icon, title, body }, i) => (
           <div
             key={title}

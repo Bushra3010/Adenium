@@ -30,17 +30,19 @@ export function ProductCardItem({
             src={product.image}
             alt={product.imageAlt}
             loading="lazy"
+            width={400}
+            height={340}
             className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.04]"
           />
         </Link>
 
         {soldOut ? (
-          <span className="pointer-events-none absolute left-0 top-4 rounded-r-full bg-ink px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white">
+          <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-ink px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white lg:left-0 lg:rounded-l-none lg:rounded-r-full">
             Sold out
           </span>
         ) : discount > 0 ? (
-          <span className="pointer-events-none absolute left-0 top-4 rounded-r-full bg-clay px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white">
-            Save {discount}%
+          <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-leaf px-3 py-1.5 text-[11px] font-semibold text-white lg:left-0 lg:rounded-l-none lg:rounded-r-full lg:bg-clay lg:uppercase lg:tracking-wide">
+            {discount}% OFF
           </span>
         ) : null}
 
@@ -87,26 +89,40 @@ export function ProductCardItem({
           </span>
         </div>
 
-        <div className="mt-auto flex items-end justify-between gap-2 pt-2.5">
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] text-ink-3">
-              {product.shortDescription ?? product.botanicalName}
-            </p>
-            {product.ratingCount > 0 && (
-              <span className="mt-1 inline-flex items-center gap-1 text-[12px] text-ink-3">
-                <Star size={13} className="text-sun" />
-                {product.ratingAvg.toFixed(1)}
-                <span>({product.ratingCount})</span>
-              </span>
-            )}
+        <div className="mt-auto pt-2.5">
+          <div className="flex items-end justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] text-ink-3">
+                {product.shortDescription ?? product.botanicalName}
+              </p>
+              {product.ratingCount > 0 && (
+                <span className="mt-1 inline-flex items-center gap-1 text-[12px] text-ink-3">
+                  <Star size={13} className="text-sun" />
+                  {product.ratingAvg.toFixed(1)}
+                  <span>({product.ratingCount})</span>
+                </span>
+              )}
+            </div>
+
+            <span className="hidden lg:block">
+              <AddToCartButton
+                variantId={product.defaultVariantId}
+                productSlug={product.slug}
+                variantCount={product.variantCount}
+                soldOut={soldOut}
+              />
+            </span>
           </div>
 
-          <AddToCartButton
-            variantId={product.defaultVariantId}
-            productSlug={product.slug}
-            variantCount={product.variantCount}
-            soldOut={soldOut}
-          />
+          <div className="mt-3 lg:hidden">
+            <AddToCartButton
+              variantId={product.defaultVariantId}
+              productSlug={product.slug}
+              variantCount={product.variantCount}
+              soldOut={soldOut}
+              fullWidth
+            />
+          </div>
         </div>
       </div>
     </article>

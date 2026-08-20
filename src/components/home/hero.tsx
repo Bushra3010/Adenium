@@ -18,10 +18,59 @@ export function Hero({
 }) {
   return (
     <section className="relative overflow-hidden border-b border-line bg-bone">
-      <LeafDecor className="-left-10 top-0 h-[320px] w-[280px]" opacity={0.22} />
-      <LeafDecor className="-right-16 bottom-0 h-[340px] w-[300px]" flip opacity={0.18} />
+      <LeafDecor className="-left-10 top-0 hidden h-[320px] w-[280px] lg:block" opacity={0.22} />
+      <LeafDecor className="-right-16 bottom-0 hidden h-[340px] w-[300px] lg:block" flip opacity={0.18} />
 
-      <div className="relative mx-auto grid max-w-[1440px] items-center gap-12 px-5 py-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-20 xl:px-10">
+      {/* Phones get a single card, the way the app-style layout calls for. */}
+      <div className="px-4 py-4 lg:hidden">
+        <div className="relative overflow-hidden rounded-2xl bg-sage/70 p-5">
+          <span className="absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-leaf px-3 py-1.5 text-[11.5px] font-medium text-white">
+            <Star size={12} filled={false} />
+            Best Seller
+          </span>
+
+          <div className="relative z-10 max-w-[56%]">
+            <p className="text-[10.5px] font-medium uppercase tracking-[0.14em] text-ink-3">
+              Desert Roses <span className="text-leaf">•</span> Caudex{' '}
+              <span className="text-leaf">•</span> Rare Cacti
+            </p>
+            <h1 className="mt-2.5 font-display text-[25px] leading-[1.14] tracking-[-0.01em] text-ink">
+              Seed that germinates. Plants with a base worth growing.
+            </h1>
+            <p className="mt-2.5 text-[12.5px] leading-relaxed text-ink-2">
+              Handpicked seeds with a high germination rate, and care you can trust.
+            </p>
+          </div>
+
+          {feature && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={feature.image}
+              alt={feature.imageAlt}
+              width={300}
+              height={240}
+              className="pointer-events-none absolute right-0 top-[14%] h-[58%] w-[44%] object-contain"
+            />
+          )}
+
+          <div className="relative z-10 mt-5 flex flex-wrap gap-2">
+            <Link
+              href="/seeds"
+              className="rounded-lg bg-leaf px-4 py-2.5 text-[13px] font-medium text-white"
+            >
+              Shop Seeds
+            </Link>
+            <Link
+              href="/plants"
+              className="rounded-lg border border-ink/25 bg-white px-4 py-2.5 text-[13px] font-medium text-ink"
+            >
+              Shop Plants
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative mx-auto hidden max-w-[1440px] items-center gap-12 px-5 py-14 lg:grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-20 xl:px-10">
         <div>
           <p className="text-[13px] font-medium uppercase tracking-[0.18em] text-ink-3">
             Desert Roses <span className="text-leaf">•</span> Caudex{' '}

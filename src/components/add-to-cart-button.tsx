@@ -16,19 +16,26 @@ export function AddToCartButton({
   productSlug,
   variantCount,
   soldOut,
+  fullWidth = false,
 }: {
   variantId: string | null;
   productSlug: string;
   variantCount: number;
   soldOut: boolean;
+  /** Phones give the action its own full-width row beneath the price. */
+  fullWidth?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
   const [added, setAdded] = useState(false);
   const router = useRouter();
 
+  const shape = fullWidth
+    ? 'w-full justify-center rounded-xl px-4 py-2.5 text-[13.5px]'
+    : 'shrink-0 rounded-full px-4 py-2 text-[13px]';
+
   if (soldOut || !variantId) {
     return (
-      <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-bone-3 px-4 py-2 text-[13px] font-medium text-ink-3">
+      <span className={`inline-flex items-center whitespace-nowrap bg-bone-3 font-medium text-ink-3 ${shape}`}>
         Sold out
       </span>
     );
@@ -38,9 +45,9 @@ export function AddToCartButton({
     return (
       <Link
         href={`/product/${productSlug}`}
-        className="relative z-10 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-leaf px-4 py-2 text-[13px] font-medium text-leaf transition-colors hover:bg-leaf hover:text-white"
+        className={`relative z-10 inline-flex items-center gap-1.5 whitespace-nowrap border border-leaf font-medium text-leaf transition-colors hover:bg-leaf hover:text-white ${shape}`}
       >
-        Options
+        {fullWidth ? 'Choose options' : 'Options'}
       </Link>
     );
   }
@@ -61,7 +68,9 @@ export function AddToCartButton({
           }
         });
       }}
-      className="relative z-10 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-leaf px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-leaf-2 disabled:opacity-60"
+      className={`relative z-10 inline-flex items-center gap-1.5 whitespace-nowrap font-medium transition-colors disabled:opacity-60 ${
+        fullWidth ? 'bg-leaf-3 text-leaf hover:bg-leaf hover:text-white' : 'bg-leaf text-white hover:bg-leaf-2'
+      } ${shape}`}
     >
       <CartPlus size={15} />
       {pending ? 'Adding…' : added ? 'Added' : 'Add to cart'}

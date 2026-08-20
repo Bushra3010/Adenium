@@ -108,46 +108,62 @@ export default async function HomePage() {
   }));
 
   return (
-    <>
-      <Hero
-        feature={plantFeature ?? featured.items[0] ?? null}
-        seedCard={seedFeature}
-        cactusCard={cactusFeature}
-      />
+    /* Phones follow the app layout — categories and products first, supporting
+       detail after. Desktop keeps the editorial order. Same markup, reordered. */
+    <div className="flex flex-col">
+      <div className="order-1">
+        <Hero
+          feature={plantFeature ?? featured.items[0] ?? null}
+          seedCard={seedFeature}
+          cactusCard={cactusFeature}
+        />
+      </div>
 
-      <TrustStrip />
-
-      <CatalogCards cards={catalogCards} />
+      <div className="order-2 lg:order-5">
+        <CategoryCircles items={circles} />
+      </div>
 
       {featured.items.length > 0 && (
-        <ProductRail
-          title="Picked this season"
-          href="/search"
-          products={featured.items}
-          wishlisted={[...saved]}
-          signedIn={Boolean(user)}
-        />
+        <div className="order-3 lg:order-4">
+          <ProductRail
+            title="Picked this season"
+            href="/search"
+            products={featured.items}
+            wishlisted={[...saved]}
+            signedIn={Boolean(user)}
+          />
+        </div>
       )}
 
-      <CategoryCircles items={circles} />
+      <div className="order-4 lg:order-2">
+        <TrustStrip />
+      </div>
 
       {newest.items.length > 0 && (
-        <ProductRail
-          title="Just listed"
-          href="/search?sort=newest"
-          linkLabel="See everything"
-          products={newest.items}
-          wishlisted={[...saved]}
-          signedIn={Boolean(user)}
-        />
+        <div className="order-5 lg:order-6">
+          <ProductRail
+            title="New arrivals"
+            href="/search?sort=newest"
+            linkLabel="See everything"
+            products={newest.items}
+            wishlisted={[...saved]}
+            signedIn={Boolean(user)}
+          />
+        </div>
       )}
 
+      <div className="order-6 lg:order-3">
+        <CatalogCards cards={catalogCards} />
+      </div>
+
       {guides.length > 0 && (
-        <section className="border-t border-line bg-bone-2">
-          <div className="mx-auto max-w-[1440px] px-5 py-16 xl:px-10">
+        <section className="order-7 border-t border-line bg-bone-2">
+          <div className="mx-auto max-w-[1440px] px-4 py-12 sm:px-5 lg:py-16 xl:px-10">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h2 className="font-display text-[34px] leading-tight text-ink">Growing guides</h2>
+                <h2 className="font-display text-[26px] leading-tight text-ink lg:text-[34px]">
+                  Growing guides
+                </h2>
                 <div className="mt-3 h-px w-14 bg-line-2" />
               </div>
               <Link
@@ -171,6 +187,8 @@ export default async function HomePage() {
                     <img
                       src={g.coverImage ?? '/img/ph/guide.svg'}
                       alt=""
+                      width={480}
+                      height={300}
                       loading="lazy"
                       className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
                     />
@@ -189,6 +207,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-    </>
+    </div>
   );
 }

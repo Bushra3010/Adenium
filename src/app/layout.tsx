@@ -3,6 +3,7 @@ import { Newsreader, Inter } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
+import { MobileTabBar } from '@/components/mobile-tab-bar';
 
 const newsreader = Newsreader({
   variable: '--font-newsreader',
@@ -46,10 +47,12 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <SiteHeader />
-        <main id="main" className="flex-1">
+        {/* Bottom padding on phones clears the fixed tab bar. */}
+        <main id="main" className="flex-1 pb-[68px] lg:pb-0">
           {children}
         </main>
         <SiteFooter />
+        <MobileTabBar />
       </body>
     </html>
   );
