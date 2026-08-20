@@ -28,7 +28,7 @@ export function TrustStrip() {
     <section className="relative overflow-hidden border-b border-line bg-bone-2">
       {/* eslint-disable @next/next/no-img-element */}
       <img
-        src="/Images/Background image left 2.png"
+        src="/Images/background image left.png"
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute -left-10 top-1/2 hidden h-[165%] -translate-y-1/2 select-none object-contain opacity-90 lg:block"
