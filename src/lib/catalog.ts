@@ -34,11 +34,16 @@ export type ProductCard = {
   imageAlt: string;
   minPrice: number;
   maxPrice: number;
+  /** The cheapest variant's own was-price, so the strike-through is truthful. */
   compareAtPrice: number | null;
+  /** Best genuine saving across variants, each compared against its own was-price. */
+  discountPercent: number;
   ratingAvg: number;
   ratingCount: number;
   available: number;
   variantCount: number;
+  /** Cheapest in-stock variant, so a card can add to cart without the PDP. */
+  defaultVariantId: string | null;
 };
 
 const PER_PAGE = 12;
@@ -148,6 +153,7 @@ export async function listProducts(filters: ProductFilters): Promise<{
         images: { where: { isPrimary: true }, take: 1, select: { url: true, alt: true } },
         variants: {
           where: { isActive: true },
+          orderBy: { price: 'asc' },
           select: { id: true, price: true, compareAtPrice: true },
         },
       },
@@ -158,10 +164,21 @@ export async function listProducts(filters: ProductFilters): Promise<{
   const availability = await availableQtyMany(variantIds);
 
   let items: ProductCard[] = rows.map((r) => {
-    const prices = r.variants.map((v) => toNumber(v.price));
-    const compare = r.variants
-      .map((v) => (v.compareAtPrice ? toNumber(v.compareAtPrice) : null))
-      .find((v) => v != null) ?? null;
+    const priced = r.variants.map((v) => ({
+      price: toNumber(v.price),
+      compareAt: v.compareAtPrice ? toNumber(v.compareAtPrice) : null,
+    }));
+    const prices = priced.map((v) => v.price);
+    // A discount belongs to a single variant. Comparing the cheapest variant's
+    // price against some other variant's was-price invents a saving nobody offers.
+    const cheapest = priced.reduce(
+      (lowest, v) => (v.price < lowest.price ? v : lowest),
+      priced[0] ?? { price: 0, compareAt: null },
+    );
+    const discountPercent = priced.reduce((best, v) => {
+      if (!v.compareAt || v.compareAt <= v.price) return best;
+      return Math.max(best, Math.round((1 - v.price / v.compareAt) * 100));
+    }, 0);
     return {
       id: r.id,
       slug: r.slug,
@@ -173,11 +190,14 @@ export async function listProducts(filters: ProductFilters): Promise<{
       imageAlt: r.images[0]?.alt ?? r.name,
       minPrice: prices.length ? Math.min(...prices) : 0,
       maxPrice: prices.length ? Math.max(...prices) : 0,
-      compareAtPrice: compare,
+      compareAtPrice: cheapest.compareAt && cheapest.compareAt > cheapest.price ? cheapest.compareAt : null,
+      discountPercent,
       ratingAvg: r.ratingAvg,
       ratingCount: r.ratingCount,
       available: r.variants.reduce((sum, v) => sum + (availability.get(v.id) ?? 0), 0),
       variantCount: r.variants.length,
+      defaultVariantId:
+        r.variants.find((v) => (availability.get(v.id) ?? 0) > 0)?.id ?? null,
     };
   });
 
@@ -245,7 +265,11 @@ export async function getRelatedProducts(productId: string, categoryIds: string[
       id: true, slug: true, name: true, botanicalName: true, type: true,
       shortDescription: true, ratingAvg: true, ratingCount: true,
       images: { where: { isPrimary: true }, take: 1, select: { url: true, alt: true } },
-      variants: { where: { isActive: true }, select: { id: true, price: true, compareAtPrice: true } },
+      variants: {
+        where: { isActive: true },
+        orderBy: { price: 'asc' },
+        select: { id: true, price: true, compareAtPrice: true },
+      },
     },
   });
 
@@ -260,9 +284,11 @@ export async function getRelatedProducts(productId: string, categoryIds: string[
       minPrice: prices.length ? Math.min(...prices) : 0,
       maxPrice: prices.length ? Math.max(...prices) : 0,
       compareAtPrice: null,
+      discountPercent: 0,
       ratingAvg: r.ratingAvg, ratingCount: r.ratingCount,
       available: r.variants.reduce((s, v) => s + (availability.get(v.id) ?? 0), 0),
       variantCount: r.variants.length,
+      defaultVariantId: r.variants.find((v) => (availability.get(v.id) ?? 0) > 0)?.id ?? null,
     };
   });
 }

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { Heart } from './icons';
 
 /** PDP-09 / ACC-05. Guests are sent to sign-in rather than silently failing. */
 export function WishlistButton({
@@ -46,13 +47,11 @@ export function WishlistButton({
       disabled={pending}
       aria-pressed={on}
       aria-label={on ? 'Remove from wishlist' : 'Add to wishlist'}
-      className={`relative z-10 inline-flex items-center gap-2 border border-line bg-white/90 p-2 backdrop-blur transition-colors hover:border-clay ${
-        withLabel ? 'px-3 py-2 text-sm' : ''
+      className={`relative z-10 inline-flex items-center gap-2 rounded-full border border-line bg-white/95 p-2.5 shadow-sm backdrop-blur transition-colors hover:border-clay ${
+        withLabel ? 'px-4 py-2.5 text-sm' : ''
       } ${on ? 'text-clay' : 'text-ink-3'}`}
     >
-      <svg width="17" height="17" viewBox="0 0 24 24" fill={on ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z" />
-      </svg>
+      <Heart size={17} filled={on} />
       {withLabel && <span>{on ? 'Saved' : 'Save'}</span>}
     </button>
   );

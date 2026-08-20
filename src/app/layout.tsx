@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Newsreader, Karla } from 'next/font/google';
+import { Newsreader, Inter } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
@@ -11,8 +11,8 @@ const newsreader = Newsreader({
   weight: ['400', '500', '600'],
 });
 
-const karla = Karla({
-  variable: '--font-karla',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',
 });
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en-IN" className={`${newsreader.variable} ${karla.variable} h-full`}>
+    <html lang="en-IN" className={`${newsreader.variable} ${inter.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         <a
           href="#main"

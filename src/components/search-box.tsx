@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { Search } from './icons';
 
 type Suggestion = { slug: string; name: string; type: string; image: string };
 
@@ -61,25 +62,31 @@ export function SearchBox() {
   }
 
   return (
-    <div ref={boxRef} className="relative w-full md:w-72">
+    <div ref={boxRef} className="relative w-full max-w-[420px]">
       <form onSubmit={submit} role="search">
         <label htmlFor="site-search" className="sr-only">
           Search seeds and plants
         </label>
-        <input
-          id="site-search"
-          type="search"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onFocus={() => items.length > 0 && setOpen(true)}
-          placeholder="Search adenium, cactus, seeds…"
-          autoComplete="off"
-          className="w-full border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-ink-3 focus:border-leaf focus:outline-none"
-        />
+        <div className="relative">
+          <Search
+            size={19}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3"
+          />
+          <input
+            id="site-search"
+            type="search"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onFocus={() => items.length > 0 && setOpen(true)}
+            placeholder="Search adenium, cactus, seeds…"
+            autoComplete="off"
+            className="w-full rounded-full border border-line bg-white py-2.5 pl-11 pr-4 text-[14px] text-ink placeholder:text-ink-3 focus:border-leaf focus:outline-none"
+          />
+        </div>
       </form>
 
       {open && value.trim().length >= 2 && items.length > 0 && (
-        <ul className="absolute left-0 right-0 top-full z-50 max-h-96 overflow-auto border border-line bg-white shadow-lg">
+        <ul className="absolute left-0 right-0 top-full z-50 mt-2 max-h-96 overflow-auto rounded-2xl border border-line bg-white py-1 shadow-xl">
           {items.map((s) => (
             <li key={s.slug}>
               <a
@@ -88,7 +95,7 @@ export function SearchBox() {
                 onClick={() => setOpen(false)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.image} alt="" width={36} height={36} className="h-9 w-9 object-cover" />
+                <img src={s.image} alt="" width={36} height={36} className="h-10 w-10 rounded-lg object-cover" />
                 <span className="min-w-0">
                   <span className="block truncate text-ink">{s.name}</span>
                   <span className="text-xs uppercase tracking-wide text-ink-3">

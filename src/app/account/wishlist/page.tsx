@@ -22,7 +22,11 @@ export default async function WishlistPage() {
           id: true, slug: true, name: true, botanicalName: true, type: true,
           shortDescription: true, ratingAvg: true, ratingCount: true, status: true,
           images: { where: { isPrimary: true }, take: 1, select: { url: true, alt: true } },
-          variants: { where: { isActive: true }, select: { id: true, price: true, compareAtPrice: true } },
+          variants: {
+            where: { isActive: true },
+            orderBy: { price: 'asc' },
+            select: { id: true, price: true, compareAtPrice: true },
+          },
         },
       },
     },
@@ -44,9 +48,11 @@ export default async function WishlistPage() {
       minPrice: prices.length ? Math.min(...prices) : 0,
       maxPrice: prices.length ? Math.max(...prices) : 0,
       compareAtPrice: null,
+      discountPercent: 0,
       ratingAvg: p.ratingAvg, ratingCount: p.ratingCount,
       available: p.variants.reduce((s, v) => s + (availability.get(v.id) ?? 0), 0),
       variantCount: p.variants.length,
+      defaultVariantId: p.variants.find((v) => (availability.get(v.id) ?? 0) > 0)?.id ?? null,
     };
   });
 
