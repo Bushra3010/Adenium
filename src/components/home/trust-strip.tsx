@@ -1,25 +1,25 @@
-import { Box, Headset, Shield, Sprout } from '../icons';
+import { Headset, Shield, Sprout, Truck } from '../icons';
 
 const ITEMS = [
   {
     Icon: Sprout,
-    title: 'Raised from seed',
-    body: 'Most of what we sell is grown here, not imported and resold.',
+    title: 'High Germination Rate',
+    body: 'Every lot is trialled before listing, and the rate is published.',
   },
   {
     Icon: Shield,
-    title: 'Germination tested',
-    body: 'Every seed lot is trialled before it is listed. Rates are published.',
+    title: 'Quality Assured',
+    body: 'Raised here from seed, not imported and resold.',
   },
   {
-    Icon: Box,
-    title: 'Packed for transit',
-    body: 'Plants ship Monday to Wednesday so nothing waits in a hub.',
+    Icon: Truck,
+    title: 'Fast & Safe Delivery',
+    body: 'Plants dispatched Mon–Wed so nothing waits in a hub.',
   },
   {
     Icon: Headset,
-    title: 'Care support',
-    body: 'Guides on every product page, and a reply within a working day.',
+    title: 'Plant Care Support',
+    body: 'Care notes on every product, and a reply within a working day.',
   },
 ];
 

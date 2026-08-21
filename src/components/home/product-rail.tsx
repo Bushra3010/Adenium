@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductCard } from '@/lib/catalog';
 import { ProductCardItem } from '../product-card';
-import { ArrowLeft, ArrowRight } from '../icons';
+import { ArrowLeft, ArrowRight, ChevronRight } from '../icons';
 
 /**
  * Horizontal product rail. Uses native scroll-snap rather than a carousel
@@ -64,10 +64,11 @@ export function ProductRail({
         </div>
         <Link
           href={href}
-          className="inline-flex items-center gap-1.5 text-[14px] font-medium text-leaf hover:underline"
+          className="inline-flex items-center gap-1 text-[14px] font-medium text-leaf hover:underline"
         >
           {linkLabel}
-          <ArrowRight size={15} />
+          <ChevronRight size={16} className="lg:hidden" />
+          <ArrowRight size={15} className="hidden lg:block" />
         </Link>
       </div>
 

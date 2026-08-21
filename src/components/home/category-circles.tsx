@@ -42,7 +42,7 @@ export function CategoryCircles({ items }: { items: CircleItem[] }) {
             return (
               <li key={item.href} className="w-[74px] shrink-0 text-center lg:w-auto">
                 <Link href={item.href} className="group block">
-                  <span className="mx-auto flex h-[68px] w-[68px] items-center justify-center rounded-full border border-line bg-white text-leaf shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:border-leaf group-hover:shadow-lg lg:h-[104px] lg:w-[104px]">
+                  <span className="mx-auto flex h-[68px] w-[68px] items-center justify-center rounded-full bg-leaf-3/60 text-leaf transition-all duration-300 group-hover:-translate-y-1 lg:h-[104px] lg:w-[104px] lg:border lg:border-line lg:bg-white lg:shadow-sm lg:group-hover:border-leaf lg:group-hover:shadow-lg">
                     <Icon size={28} strokeWidth={1.3} className="lg:hidden" />
                     <Icon size={38} strokeWidth={1.3} className="hidden lg:block" />
                   </span>

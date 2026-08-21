@@ -31,13 +31,19 @@ function check(name, passed, detail = '') {
   console.log(`${passed ? '  ok  ' : ' FAIL '} ${name}${detail ? ` — ${detail}` : ''}`);
 }
 
-// The signed-in cart persists between runs by design (CART-02), so clear the
-// test customer's cart first to keep this script repeatable.
+// Reset the fixtures this run depends on. The signed-in cart persists between
+// runs by design (CART-02), and each run sells a unit of stock — left alone the
+// suite eventually exhausts its own fixture and fails on a correctly sold-out
+// product rather than a real defect.
 const prisma = new PrismaClient();
 const testUser = await prisma.user.findUnique({ where: { email: 'customer@adenium.local' } });
 if (testUser) {
   await prisma.cart.deleteMany({ where: { userId: testUser.id } });
 }
+await prisma.variant.updateMany({
+  where: { sku: { in: ['ADN-S-ARB-TS-01', 'ADN-S-ARB-TS-04', 'ADN-S-GOM-GLO-01'] } },
+  data: { stockQty: 40 },
+});
 await prisma.$disconnect();
 
 const browser = await chromium.launch();

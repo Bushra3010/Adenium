@@ -61,9 +61,9 @@ export function ProductCardItem({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-3 lg:p-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-display text-[16.5px] leading-snug text-ink line-clamp-2">
+          <h3 className="line-clamp-2 font-display text-[14.5px] leading-snug text-ink lg:text-[16.5px]">
             <Link href={`/product/${product.slug}`} className="transition-colors hover:text-leaf">
               <span className="absolute inset-0" aria-hidden="true" />
               {product.name}
@@ -75,7 +75,7 @@ export function ProductCardItem({
               <span className="block text-[10.5px] uppercase tracking-wide text-ink-3">from</span>
             )}
             <span
-              className={`whitespace-nowrap text-[16px] font-semibold ${
+              className={`whitespace-nowrap text-[14px] font-semibold lg:text-[16px] ${
                 wasPrice ? 'text-clay' : 'text-ink'
               }`}
             >

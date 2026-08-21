@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getCategoryTree, listProducts } from '@/lib/catalog';
+import { getBestsellers, getCategoryTree, listProducts } from '@/lib/catalog';
 import { getCurrentUser } from '@/lib/auth';
 import { wishlistedIds } from '@/lib/wishlist';
 import { prisma } from '@/lib/prisma';
@@ -16,16 +16,22 @@ export const dynamic = 'force-dynamic';
 const EMPTY = { items: [], total: 0, page: 1, perPage: 0, pages: 0 };
 
 export default async function HomePage() {
-  const [tree, featured, user] = await Promise.all([
+  const [tree, featured, bestsellers, user] = await Promise.all([
     safely(() => getCategoryTree(), [], 'home categories'),
     safely(() => listProducts({ sort: 'relevance', featuredOnly: true, perPage: 8 }), EMPTY, 'featured'),
+    safely(() => getBestsellers(8), [] as Awaited<ReturnType<typeof getBestsellers>>, 'bestsellers'),
     safely(() => getCurrentUser(), null, 'home session'),
   ]);
 
   // Keep the two rails distinct — the newest products sort high on relevance too.
   const [newest, guides, saved, counts] = await Promise.all([
     safely(
-      () => listProducts({ sort: 'newest', perPage: 8, excludeIds: featured.items.map((p) => p.id) }),
+      () =>
+        listProducts({
+          sort: 'newest',
+          perPage: 8,
+          excludeIds: bestsellers.map((p) => p.id),
+        }),
       EMPTY,
       'newest',
     ),
@@ -68,12 +74,7 @@ export default async function HomePage() {
     ) ?? null;
 
   const circles: CircleItem[] = [
-    {
-      href: '/seeds/adenium-seeds',
-      label: 'Adenium Seeds',
-      sub: `${countFor('adenium-seeds')} varieties`,
-      icon: 'seeds',
-    },
+    { href: '/seeds', label: 'Seeds', sub: `${countFor('seeds')} varieties`, icon: 'seeds' },
     {
       href: '/plants/adenium-caudex',
       label: 'Adenium Plants',
@@ -123,12 +124,13 @@ export default async function HomePage() {
         <CategoryCircles items={circles} />
       </div>
 
-      {featured.items.length > 0 && (
+      {bestsellers.length > 0 && (
         <div className="order-3 lg:order-4">
           <ProductRail
-            title="Picked this season"
+            title="Bestsellers"
             href="/search"
-            products={featured.items}
+            linkLabel="See all"
+            products={bestsellers}
             wishlisted={[...saved]}
             signedIn={Boolean(user)}
           />
@@ -142,9 +144,9 @@ export default async function HomePage() {
       {newest.items.length > 0 && (
         <div className="order-5 lg:order-6">
           <ProductRail
-            title="New arrivals"
+            title="New Arrivals"
             href="/search?sort=newest"
-            linkLabel="See everything"
+            linkLabel="See all"
             products={newest.items}
             wishlisted={[...saved]}
             signedIn={Boolean(user)}

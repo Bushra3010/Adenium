@@ -293,6 +293,41 @@ export async function getRelatedProducts(productId: string, categoryIds: string[
   });
 }
 
+/**
+ * Genuinely best-selling products, by units sold on paid orders. A new store
+ * has no sales yet, so the list is topped up with featured products rather
+ * than the section calling arbitrary items bestsellers.
+ */
+export async function getBestsellers(take = 8): Promise<ProductCard[]> {
+  const sold = await prisma.orderItem.groupBy({
+    by: ['productId'],
+    where: { order: { paymentStatus: 'PAID' } },
+    _sum: { quantity: true },
+    orderBy: { _sum: { quantity: 'desc' } },
+    take,
+  });
+
+  const rankedIds = sold.map((s) => s.productId);
+  const byRank = new Map(rankedIds.map((id, i) => [id, i]));
+
+  const ranked = rankedIds.length
+    ? (await listProducts({ perPage: take, sort: 'relevance' })).items.filter((p) =>
+        byRank.has(p.id),
+      )
+    : [];
+  ranked.sort((a, b) => (byRank.get(a.id) ?? 0) - (byRank.get(b.id) ?? 0));
+
+  if (ranked.length >= take) return ranked.slice(0, take);
+
+  const filler = await listProducts({
+    sort: 'relevance',
+    featuredOnly: true,
+    perPage: take,
+    excludeIds: ranked.map((p) => p.id),
+  });
+  return [...ranked, ...filler.items].slice(0, take);
+}
+
 export async function getCategoryTree() {
   return prisma.category.findMany({
     where: { parentId: null, isActive: true },
