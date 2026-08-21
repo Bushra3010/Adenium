@@ -31,21 +31,25 @@ export function TrustStrip() {
         src="/Images/background image left.png"
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute -left-10 top-1/2 hidden h-[165%] -translate-y-1/2 select-none object-contain opacity-90 lg:block"
+        className="pointer-events-none absolute -left-8 top-0 h-[78%] max-w-[30%] select-none object-contain object-left-top opacity-70 lg:top-1/2 lg:h-[165%] lg:max-w-none lg:-translate-y-1/2 lg:object-contain lg:opacity-90"
       />
       <img
         src="/Images/background image right.png"
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute -right-10 top-1/2 hidden h-[165%] -translate-y-1/2 select-none object-contain opacity-90 lg:block"
+        className="pointer-events-none absolute -right-8 bottom-0 h-[80%] max-w-[32%] select-none object-contain object-right-bottom opacity-70 lg:bottom-auto lg:top-1/2 lg:-right-10 lg:h-[165%] lg:max-w-none lg:-translate-y-1/2 lg:opacity-90"
       />
       {/* eslint-enable @next/next/no-img-element */}
 
-      {/* Phone: one scrollable card */}
-      <div className="px-4 py-4 lg:hidden">
-        <ul className="rail flex gap-3 overflow-x-auto rounded-2xl bg-bone-2 p-4">
+      {/* Phone: a scrolling row framed by the foliage, inset so the first and
+          last item clear the leaves. */}
+      <div className="relative py-5 lg:hidden">
+        <ul className="rail relative flex gap-4 overflow-x-auto px-[56px]">
           {ITEMS.map(({ Icon, title, body }) => (
-            <li key={title} className="flex w-[210px] shrink-0 items-start gap-2.5">
+            <li
+              key={title}
+              className="flex w-[196px] shrink-0 items-start gap-2.5"
+            >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-leaf-3 text-leaf">
                 <Icon size={17} />
               </span>

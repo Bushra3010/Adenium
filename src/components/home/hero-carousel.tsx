@@ -24,11 +24,9 @@ type Slide = {
  */
 export function HeroCarousel({
   feature,
-  seedCard,
   cactusCard,
 }: {
   feature: ProductCard | null;
-  seedCard: ProductCard | null;
   cactusCard: ProductCard | null;
 }) {
   const slides: Slide[] = [
@@ -49,7 +47,7 @@ export function HeroCarousel({
       body: 'Handpicked lots with published germination rates.',
       href: '/seeds/adenium-seeds',
       cta: 'Explore',
-      image: seedCard?.image ?? '/Images/Seeds.png',
+      image: '/Images/Seeds.png',
       imageAlt: '',
       tone: 'bg-sage/70',
     },

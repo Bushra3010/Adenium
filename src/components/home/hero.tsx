@@ -24,7 +24,7 @@ export function Hero({
 
       {/* Phones get a swipeable set of cards, the way the app layout calls for. */}
       <div className="lg:hidden">
-        <HeroCarousel feature={feature} seedCard={seedCard} cactusCard={cactusCard} />
+        <HeroCarousel feature={feature} cactusCard={cactusCard} />
       </div>
 
       <div className="relative mx-auto hidden max-w-[1440px] items-center gap-12 px-5 py-14 lg:grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-20 xl:px-10">
