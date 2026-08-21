@@ -64,6 +64,7 @@ export function HeroCarousel({
 
   const railRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(0);
+  const [taken, setTaken] = useState(false);
 
   const measure = useCallback(() => {
     const el = railRef.current;
@@ -79,12 +80,35 @@ export function HeroCarousel({
     return () => observer.disconnect();
   }, [measure]);
 
+  // Slides two and three carry their own offers, so a visitor who never swipes
+  // would never see them. Advance until they take control, and never against a
+  // reduced-motion preference.
+  useEffect(() => {
+    if (taken) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const timer = setInterval(() => {
+      const el = railRef.current;
+      if (!el || el.clientWidth === 0) return;
+      const next = (Math.round(el.scrollLeft / el.clientWidth) + 1) % slides.length;
+      el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' });
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [taken, slides.length]);
+
   return (
     <div className="py-4">
-      <div ref={railRef} onScroll={measure} className="rail flex overflow-x-auto">
+      <div
+        ref={railRef}
+        onScroll={measure}
+        onPointerDown={() => setTaken(true)}
+        onKeyDown={() => setTaken(true)}
+        className="rail flex overflow-x-auto"
+      >
         {slides.map((slide) => (
           <div key={slide.title} className="w-full shrink-0 px-4">
-            <div className={`relative min-h-[300px] overflow-hidden rounded-2xl ${slide.tone} p-5`}>
+            <div className={`relative flex min-h-[268px] flex-col justify-center overflow-hidden rounded-2xl ${slide.tone} p-5`}>
               {slide.badge && (
                 <span className="absolute right-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-leaf px-3 py-1.5 text-[11.5px] font-medium text-white">
                   <Star size={12} filled={false} />
@@ -109,7 +133,11 @@ export function HeroCarousel({
                 <img
                   src={slide.image}
                   alt={slide.imageAlt}
-                  className="pointer-events-none absolute right-0 top-[14%] h-[58%] w-[44%] object-contain"
+                  className={`pointer-events-none absolute right-0 object-contain ${
+                    slide.badge
+                      ? 'top-[14%] h-[58%] w-[44%]'
+                      : 'top-1/2 h-[72%] w-[48%] -translate-y-1/2'
+                  }`}
                 />
               )}
 
@@ -141,6 +169,7 @@ export function HeroCarousel({
             key={slide.title}
             type="button"
             onClick={() => {
+              setTaken(true);
               const el = railRef.current;
               if (el) el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' });
             }}
