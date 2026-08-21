@@ -32,10 +32,22 @@ export function ProductRail({
 
   const measure = useCallback(() => {
     const el = railRef.current;
-    if (!el) return;
-    const total = Math.max(1, Math.ceil(el.scrollWidth / el.clientWidth));
+    if (!el || el.clientWidth === 0) return;
+
+    // Derive both the dot count and the active dot from the distance the rail
+    // can actually travel. Counting viewport-widths of content instead leaves
+    // the final dot unreachable whenever the content is not a whole multiple of
+    // the viewport, because scrollLeft stops one viewport short of scrollWidth.
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 1) {
+      setPages(1);
+      setPage(0);
+      return;
+    }
+
+    const total = Math.ceil(maxScroll / el.clientWidth) + 1;
     setPages(total);
-    setPage(Math.round(el.scrollLeft / el.clientWidth));
+    setPage(Math.round((el.scrollLeft / maxScroll) * (total - 1)));
   }, []);
 
   useEffect(() => {
@@ -50,7 +62,10 @@ export function ProductRail({
   const scrollTo = (index: number) => {
     const el = railRef.current;
     if (!el) return;
-    el.scrollTo({ left: index * el.clientWidth, behavior: 'smooth' });
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    // Spread the dots across the travel, so the last one reaches the very end.
+    const target = pages <= 1 ? 0 : (index / (pages - 1)) * maxScroll;
+    el.scrollTo({ left: target, behavior: 'smooth' });
   };
 
   const saved = new Set(wishlisted);

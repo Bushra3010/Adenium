@@ -69,8 +69,12 @@ export function HeroCarousel({
   const measure = useCallback(() => {
     const el = railRef.current;
     if (!el || el.clientWidth === 0) return;
-    setPage(Math.round(el.scrollLeft / el.clientWidth));
-  }, []);
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const last = slides.length - 1;
+    setPage(
+      maxScroll <= 1 ? 0 : Math.min(last, Math.round((el.scrollLeft / maxScroll) * last)),
+    );
+  }, [slides.length]);
 
   useEffect(() => {
     const el = railRef.current;
